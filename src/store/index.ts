@@ -23,10 +23,12 @@ const catchLastAction: Middleware = () => (next: Dispatch<RootAction>) => (
   return next(action);
 };
 
-export const createMainReduxStore = (): void => {
+export const createMainReduxStore = (): Store<RootState> => {
   const middlewares = applyMiddleware(catchLastAction, forwardToRenderers);
 
   reduxStore = createStore(rootReducer, {}, middlewares);
+
+  return reduxStore;
 };
 
 export const createRendererReduxStore = async (): Promise<Store> => {

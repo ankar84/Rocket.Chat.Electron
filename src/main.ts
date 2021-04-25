@@ -1,5 +1,8 @@
 import { app } from 'electron';
+import i18next from 'i18next';
+import { createElement } from 'react';
 
+import { render } from '../packages/null-react-renderer/dist/esm';
 import { performElectronStartup, setupApp } from './app/main/app';
 import {
   mergePersistableValues,
@@ -10,6 +13,7 @@ import { setupDeepLinks, processDeepLinksInArgs } from './deepLinks/main';
 import { setupDownloads } from './downloads/main';
 import { setupMainErrorHandling } from './errors';
 import i18n from './i18n/main';
+import AppRoot from './mainProcess/components/AppRoot';
 import { setupNavigation } from './navigation/main';
 import { setupNotifications } from './notifications/main';
 import { setupScreenSharing } from './screenSharing/main';
@@ -25,7 +29,6 @@ import {
 } from './ui/main/rootWindow';
 import { attachGuestWebContentsEvents } from './ui/main/serverView';
 import touchBar from './ui/main/touchBar';
-import trayIcon from './ui/main/trayIcon';
 import { setupUpdates } from './updates/main';
 import { setupPowerMonitor } from './userPresence/main';
 
@@ -34,7 +37,7 @@ const start = async (): Promise<void> => {
   setupMainErrorHandling();
   performElectronStartup();
 
-  createMainReduxStore();
+  const reduxStore = createMainReduxStore();
 
   await app.whenReady();
 
@@ -44,6 +47,8 @@ const start = async (): Promise<void> => {
 
   i18n.setUp();
   await i18n.wait();
+
+  render(createElement(AppRoot, { reduxStore, i18n: i18next }));
 
   setupApp();
 
@@ -70,13 +75,11 @@ const start = async (): Promise<void> => {
   dock.setUp();
   menuBar.setUp();
   touchBar.setUp();
-  trayIcon.setUp();
 
   app.addListener('before-quit', () => {
     dock.tearDown();
     menuBar.tearDown();
     touchBar.tearDown();
-    trayIcon.tearDown();
   });
 
   watchAndPersistChanges();
