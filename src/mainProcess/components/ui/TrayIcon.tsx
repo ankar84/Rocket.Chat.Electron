@@ -1,15 +1,16 @@
-import { app, Menu, Tray } from 'electron';
+import { app, BrowserWindow, Menu, Tray } from 'electron';
 import { TFunction } from 'i18next';
 import { ReactElement, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
+import { usePrevious } from '../../../common/hooks/usePrevious';
 import { Server } from '../../../servers/common';
 import { select } from '../../../store';
 import { RootState } from '../../../store/rootReducer';
 import { getAppIconPath, getTrayIconPath } from '../../../ui/main/icons';
-import { getRootWindow } from '../../../ui/main/rootWindow';
 import { selectGlobalBadge } from '../../../ui/selectors';
+import { useRootWindow } from './RootWindow';
 
 const warnStillRunning = (trayIcon: Tray, t: TFunction): void => {
   if (process.platform !== 'win32') {
@@ -63,7 +64,7 @@ const selectIsRootWindowVisible = ({
   rootWindowState: { visible },
 }: RootState): boolean => visible;
 
-const createTrayIcon = (): Tray => {
+const createTrayIcon = (rootWindow: BrowserWindow): Tray => {
   const image = getTrayIconPath({
     platform: process.platform,
     badge: undefined,
@@ -74,27 +75,24 @@ const createTrayIcon = (): Tray => {
   if (process.platform !== 'darwin') {
     trayIcon.addListener('click', async () => {
       const isRootWindowVisible = select(selectIsRootWindowVisible);
-      const browserWindow = await getRootWindow();
 
       if (isRootWindowVisible) {
-        browserWindow.hide();
+        rootWindow.hide();
         return;
       }
 
-      browserWindow.show();
+      rootWindow.show();
     });
   }
 
   trayIcon.addListener('balloon-click', async () => {
     const isRootWindowVisible = select(selectIsRootWindowVisible);
-    const browserWindow = await getRootWindow();
-
     if (isRootWindowVisible) {
-      browserWindow.hide();
+      rootWindow.hide();
       return;
     }
 
-    browserWindow.show();
+    rootWindow.show();
   });
 
   trayIcon.addListener('right-click', (_event, bounds) => {
@@ -104,18 +102,20 @@ const createTrayIcon = (): Tray => {
   return trayIcon;
 };
 
-const useTrayIcon = (): void => {
+const useTrayIconState = (): void => {
   const ref = useRef<Tray>();
 
+  const rootWindow = useRootWindow();
+
   useEffect(() => {
-    const trayIcon = createTrayIcon();
+    const trayIcon = createTrayIcon(rootWindow);
     ref.current = trayIcon;
 
     return () => {
       trayIcon.destroy();
       ref.current = undefined;
     };
-  }, []);
+  }, [rootWindow]);
 
   const { t } = useTranslation();
 
@@ -135,7 +135,7 @@ const useTrayIcon = (): void => {
   const isRootWindowVisible = useSelector(
     (state: RootState) => state.rootWindowState.visible
   );
-  const prevIsRootWindowVisibleRef = useRef(isRootWindowVisible);
+  const prevIsRootWindowVisible = usePrevious(isRootWindowVisible);
   const firstTrayIconBalloonShownRef = useRef(false);
 
   useEffect(() => {
@@ -148,14 +148,12 @@ const useTrayIcon = (): void => {
       {
         label: isRootWindowVisible ? t('tray.menu.hide') : t('tray.menu.show'),
         click: async () => {
-          const browserWindow = await getRootWindow();
-
           if (isRootWindowVisible) {
-            browserWindow.hide();
+            rootWindow.hide();
             return;
           }
 
-          browserWindow.show();
+          rootWindow.show();
         },
       },
       {
@@ -167,7 +165,6 @@ const useTrayIcon = (): void => {
     ]);
     trayIcon.setContextMenu(menu);
 
-    const prevIsRootWindowVisible = prevIsRootWindowVisibleRef.current;
     const firstTrayIconBalloonShown = firstTrayIconBalloonShownRef.current;
 
     if (
@@ -179,11 +176,11 @@ const useTrayIcon = (): void => {
       warnStillRunning(trayIcon, t);
       firstTrayIconBalloonShownRef.current = true;
     }
-  }, [isRootWindowVisible, t]);
+  }, [isRootWindowVisible, prevIsRootWindowVisible, rootWindow, t]);
 };
 
 const TrayIcon = (): ReactElement | null => {
-  useTrayIcon();
+  useTrayIconState();
 
   return null;
 };

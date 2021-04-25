@@ -105,63 +105,6 @@ export const listen: {
   });
 };
 
-export abstract class Service {
-  private unsubscribers = new Set<() => void>();
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  protected initialize(): void {}
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  protected destroy(): void {}
-
-  protected watch<T>(
-    selector: Selector<T>,
-    watcher: (curr: T, prev: T | undefined) => void
-  ): void {
-    this.unsubscribers.add(watch(selector, watcher));
-  }
-
-  protected listen<ActionType extends RootAction['type']>(
-    type: ActionType,
-    listener: (action: Extract<RootAction, { type: ActionType }>) => void
-  ): void;
-
-  // eslint-disable-next-line no-dupe-class-members
-  protected listen<Action extends RootAction>(
-    predicate: (action: RootAction) => action is Action,
-    listener: (action: Action) => void
-  ): void;
-
-  // eslint-disable-next-line no-dupe-class-members
-  protected listen<
-    ActionType extends RootAction['type'],
-    Action extends RootAction
-  >(
-    typeOrPredicate: ActionType | ((action: RootAction) => action is Action),
-    listener: (action: RootAction) => void
-  ): void {
-    if (typeof typeOrPredicate === 'string') {
-      this.unsubscribers.add(listen(typeOrPredicate, listener));
-      return;
-    }
-
-    this.unsubscribers.add(listen(typeOrPredicate, listener));
-  }
-
-  public setUp(): void {
-    this.initialize();
-  }
-
-  public tearDown(): void {
-    this.unsubscribers.forEach((unsubscribe) => unsubscribe());
-    this.destroy();
-  }
-}
-
-// const isResponseTo = <Response extends RootAction>(id: unknown, type: Response['type']) =>
-//   (action: RootAction): action is Response =>
-//     isResponse(action) && action.type === type && action.meta.id === id;
-
 export const request = <
   Request extends RootAction,
   ResponseTypes extends [...RootAction['type'][]],

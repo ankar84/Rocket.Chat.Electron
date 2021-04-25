@@ -1,7 +1,5 @@
 import { InitOptions } from 'i18next';
 
-export const fallbackLng = 'en' as const;
-
 const byteUnits = [
   'byte',
   'kilobyte',

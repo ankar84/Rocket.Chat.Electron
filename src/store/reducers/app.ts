@@ -12,6 +12,7 @@ type State = {
 };
 
 const initialState: State = {
+  name: null,
   locale: null,
   path: null,
   platform: null,

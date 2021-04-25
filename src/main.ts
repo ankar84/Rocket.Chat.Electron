@@ -3,16 +3,16 @@ import i18next from 'i18next';
 import { createElement } from 'react';
 
 import { render } from '../packages/null-react-renderer/dist/esm';
-import { performElectronStartup, setupApp } from './app/main/app';
+import { performElectronStartup } from './app/main/app';
 import {
   mergePersistableValues,
   watchAndPersistChanges,
 } from './app/main/data';
 import { setUserDataDirectory } from './app/main/dev';
+import { initializeI18next } from './common/i18n/initializeI18next';
 import { setupDeepLinks, processDeepLinksInArgs } from './deepLinks/main';
 import { setupDownloads } from './downloads/main';
 import { setupMainErrorHandling } from './errors';
-import i18n from './i18n/main';
 import AppRoot from './mainProcess/components/AppRoot';
 import { setupNavigation } from './navigation/main';
 import { setupNotifications } from './notifications/main';
@@ -20,15 +20,12 @@ import { setupScreenSharing } from './screenSharing/main';
 import { setupServers } from './servers/main';
 import { setupSpellChecking } from './spellChecking/main';
 import { createMainReduxStore } from './store';
-import dock from './ui/main/dock';
-import menuBar from './ui/main/menuBar';
 import {
   createRootWindow,
   showRootWindow,
   exportLocalStorage,
 } from './ui/main/rootWindow';
 import { attachGuestWebContentsEvents } from './ui/main/serverView';
-import touchBar from './ui/main/touchBar';
 import { setupUpdates } from './updates/main';
 import { setupPowerMonitor } from './userPresence/main';
 
@@ -44,6 +41,7 @@ const start = async (): Promise<void> => {
   reduxStore.dispatch({
     type: 'app/set-info',
     payload: {
+      name: app.getName(),
       version: app.getVersion(),
       path: app.getAppPath(),
       locale: app.getLocale(),
@@ -54,13 +52,9 @@ const start = async (): Promise<void> => {
   const localStorage = await exportLocalStorage();
   await mergePersistableValues(localStorage);
   await setupServers(localStorage);
-
-  i18n.setUp();
-  await i18n.wait();
+  await initializeI18next(app.getLocale());
 
   render(createElement(AppRoot, { reduxStore, i18n: i18next }));
-
-  setupApp();
 
   createRootWindow();
   attachGuestWebContentsEvents();
@@ -81,16 +75,6 @@ const start = async (): Promise<void> => {
   setupPowerMonitor();
   await setupUpdates();
   setupDownloads();
-
-  dock.setUp();
-  menuBar.setUp();
-  touchBar.setUp();
-
-  app.addListener('before-quit', () => {
-    dock.tearDown();
-    menuBar.tearDown();
-    touchBar.tearDown();
-  });
 
   watchAndPersistChanges();
 

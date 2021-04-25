@@ -1,6 +1,6 @@
 import { Resource } from 'i18next';
 
-export default {
+const resources = {
   'de-DE': (): Promise<Resource> => import('./de-DE.i18n.json'),
   'en': (): Promise<Resource> => import('./en.i18n.json'),
   'fr': (): Promise<Resource> => import('./fr.i18n.json'),
@@ -14,3 +14,7 @@ export default {
   'zh-CN': (): Promise<Resource> => import('./zh-CN.i18n.json'),
   'zh-TW': (): Promise<Resource> => import('./zh-TW.i18n.json'),
 } as const;
+
+export const fallbackLng: keyof typeof resources = 'en';
+
+export default resources;

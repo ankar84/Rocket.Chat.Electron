@@ -1,8 +1,6 @@
 import { app } from 'electron';
 import rimraf from 'rimraf';
 
-import { getRootWindow } from '../../ui/main/rootWindow';
-
 export const relaunchApp = (...args: string[]): void => {
   const command = process.argv.slice(1, app.isPackaged ? 1 : 2);
   app.relaunch({ args: [...command, ...args] });
@@ -36,17 +34,4 @@ export const performElectronStartup = (): void => {
     app.commandLine.appendSwitch('--disable-accelerated-2d-canvas');
     app.commandLine.appendSwitch('--disable-gpu');
   }
-};
-
-export const setupApp = (): void => {
-  app.addListener('activate', async () => {
-    const browserWindow = await getRootWindow();
-
-    if (!browserWindow.isVisible()) {
-      browserWindow.showInactive();
-    }
-    browserWindow.focus();
-  });
-
-  app.addListener('window-all-closed', (): void => undefined);
 };
