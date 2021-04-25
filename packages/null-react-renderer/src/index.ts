@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import Reconciler from 'react-reconciler';
 
 const emptyObject = Object.freeze({});
