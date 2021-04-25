@@ -1,15 +1,13 @@
 import { app, Menu, MenuItemConstructorOptions, shell } from 'electron';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
 
 import { relaunchApp } from '../../../app/main/app';
+import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
 import { useAppName } from '../../../common/hooks/useAppName';
 import { useAppPlatform } from '../../../common/hooks/useAppPlatform';
+import { useAppSelector } from '../../../common/hooks/useAppSelector';
 import { CERTIFICATES_CLEARED } from '../../../navigation/actions';
-import { RootAction } from '../../../store/actions';
-import { RootState } from '../../../store/rootReducer';
 import {
   MENU_BAR_ABOUT_CLICKED,
   MENU_BAR_ADD_NEW_SERVER_CLICKED,
@@ -34,7 +32,7 @@ const useMenuBarState = (): void => {
   const appName = useAppName();
   const appPlatform = useAppPlatform();
   const rootWindow = useRootWindow();
-  const dispatch = useDispatch<Dispatch<RootAction>>();
+  const dispatch = useAppDispatch();
 
   const appMenuTemplate = useMemo(
     (): MenuItemConstructorOptions => ({
@@ -155,19 +153,11 @@ const useMenuBarState = (): void => {
     [t]
   );
 
-  const currentView = useSelector((state: RootState) => state.currentView);
-  const isSideBarEnabled = useSelector(
-    (state: RootState) => state.isSideBarEnabled
-  );
-  const isTrayIconEnabled = useSelector(
-    (state: RootState) => state.isTrayIconEnabled
-  );
-  const isMenuBarEnabled = useSelector(
-    (state: RootState) => state.isMenuBarEnabled
-  );
-  const rootWindowState = useSelector(
-    (state: RootState) => state.rootWindowState
-  );
+  const currentView = useAppSelector((state) => state.currentView);
+  const isSideBarEnabled = useAppSelector((state) => state.isSideBarEnabled);
+  const isTrayIconEnabled = useAppSelector((state) => state.isTrayIconEnabled);
+  const isMenuBarEnabled = useAppSelector((state) => state.isMenuBarEnabled);
+  const rootWindowState = useAppSelector((state) => state.rootWindowState);
 
   const viewMenuTemplate = useMemo(
     (): MenuItemConstructorOptions => ({
@@ -377,10 +367,10 @@ const useMenuBarState = (): void => {
     ]
   );
 
-  const servers = useSelector((state: RootState) => state.servers);
+  const servers = useAppSelector((state) => state.servers);
 
-  const isShowWindowOnUnreadChangedEnabled = useSelector(
-    (state: RootState) => state.isShowWindowOnUnreadChangedEnabled
+  const isShowWindowOnUnreadChangedEnabled = useAppSelector(
+    (state) => state.isShowWindowOnUnreadChangedEnabled
   );
 
   const windowMenuTemplate = useMemo(

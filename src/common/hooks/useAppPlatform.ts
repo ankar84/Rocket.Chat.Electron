@@ -1,9 +1,7 @@
-import { useSelector } from 'react-redux';
-
-import { RootState } from '../../store/rootReducer';
+import { useAppSelector } from './useAppSelector';
 
 export const useAppPlatform = (): NodeJS.Platform => {
-  const appPlatform = useSelector((state: RootState) => state.app.platform);
+  const appPlatform = useAppSelector((state) => state.app.platform);
 
   if (appPlatform === null) {
     throw new Error('app platform was not set');

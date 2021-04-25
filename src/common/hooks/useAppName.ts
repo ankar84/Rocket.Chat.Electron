@@ -1,9 +1,7 @@
-import { useSelector } from 'react-redux';
-
-import { RootState } from '../../store/rootReducer';
+import { useAppSelector } from './useAppSelector';
 
 export const useAppName = (): string => {
-  const appName = useSelector((state: RootState) => state.app.name);
+  const appName = useAppSelector((state) => state.app.name);
 
   if (appName === null) {
     throw new Error('app name was not set');

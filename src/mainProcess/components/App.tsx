@@ -5,10 +5,9 @@ import React, {
   useLayoutEffect,
   useState,
 } from 'react';
-import { useSelector } from 'react-redux';
 
 import { useAppPlatform } from '../../common/hooks/useAppPlatform';
-import { RootState } from '../../store/rootReducer';
+import { useAppSelector } from '../../common/hooks/useAppSelector';
 import Dock from './ui/Dock';
 import MenuBar from './ui/MenuBar';
 import RootWindow from './ui/RootWindow';
@@ -44,9 +43,7 @@ const useIsAppActive = (): boolean => {
 const App = (): ReactElement | null => {
   const active = useIsAppActive();
 
-  const isTrayIconEnabled = useSelector(
-    (state: RootState) => state.isTrayIconEnabled
-  );
+  const isTrayIconEnabled = useAppSelector((state) => state.isTrayIconEnabled);
 
   const platform = useAppPlatform();
   const dockAvailable = platform === 'darwin';

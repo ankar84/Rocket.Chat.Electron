@@ -1,9 +1,7 @@
-import { useSelector } from 'react-redux';
-
-import { RootState } from '../../store/rootReducer';
+import { useAppSelector } from './useAppSelector';
 
 export const useAppPath = (): string => {
-  const appPath = useSelector((state: RootState) => state.app.path);
+  const appPath = useAppSelector((state) => state.app.path);
 
   if (appPath === null) {
     throw new Error('app path was not set');

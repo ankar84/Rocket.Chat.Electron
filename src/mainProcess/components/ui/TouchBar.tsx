@@ -8,13 +8,11 @@ import type {
 import { TFunction } from 'i18next';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
 
+import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
 import { useAppPath } from '../../../common/hooks/useAppPath';
+import { useAppSelector } from '../../../common/hooks/useAppSelector';
 import { Server } from '../../../servers/common';
-import { RootAction } from '../../../store/actions';
-import { RootState } from '../../../store/rootReducer';
 import {
   TOUCH_BAR_FORMAT_BUTTON_TOUCHED,
   TOUCH_BAR_SELECT_SERVER_TOUCHED,
@@ -25,8 +23,8 @@ const useServerSelectionScrubber = () => {
   const ref = useRef<TouchBarScrubber>();
 
   const rootWindow = useRootWindow();
-  const dispatch = useDispatch<Dispatch<RootAction>>();
-  const servers = useSelector((state: RootState) => state.servers);
+  const dispatch = useAppDispatch();
+  const servers = useAppSelector((state) => state.servers);
 
   const handleSelect = useMutableCallback((index: number) => {
     if (!rootWindow.isVisible()) {
@@ -76,7 +74,7 @@ const useMessageBoxFormattingButtons = () => {
 
   const appPath = useAppPath();
   const rootWindow = useRootWindow();
-  const dispatch = useDispatch<Dispatch<RootAction>>();
+  const dispatch = useAppDispatch();
 
   const handleChange = useMutableCallback(async (selectedIndex) => {
     if (!rootWindow.isVisible()) {
@@ -105,14 +103,6 @@ const useMessageBoxFormattingButtons = () => {
 
   return ref.current;
 };
-
-const selectCurrentServer = ({
-  servers,
-  currentView,
-}: RootState): Server | null =>
-  typeof currentView === 'object'
-    ? servers.find(({ url }) => url === currentView.url) ?? null
-    : null;
 
 const toggleMessageFormattingButtons = (
   messageBoxFormattingButtons: TouchBarSegmentedControl,
@@ -207,7 +197,12 @@ const useTouchBarState = (): void => {
     messageBoxFormattingButtons,
   ]);
 
-  const currentServer = useSelector(selectCurrentServer);
+  const currentServer = useAppSelector(
+    ({ servers, currentView }): Server | null =>
+      typeof currentView === 'object'
+        ? servers.find(({ url }) => url === currentView.url) ?? null
+        : null
+  );
 
   const { t } = useTranslation();
 
@@ -224,7 +219,7 @@ const useTouchBarState = (): void => {
     rootWindow.setTouchBar(touchBar);
   }, [currentServer, rootWindow, t]);
 
-  const servers = useSelector((state: RootState) => state.servers);
+  const servers = useAppSelector((state) => state.servers);
 
   useEffect(() => {
     const components = ref.current;
@@ -239,8 +234,8 @@ const useTouchBarState = (): void => {
     rootWindow.setTouchBar(touchBar);
   }, [currentServer, rootWindow, servers]);
 
-  const isMessageBoxFocused = useSelector(
-    (state: RootState) => state.isMessageBoxFocused
+  const isMessageBoxFocused = useAppSelector(
+    (state) => state.isMessageBoxFocused
   );
 
   useEffect(() => {

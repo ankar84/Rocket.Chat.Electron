@@ -104,4 +104,8 @@ export type UiActionTypeToPayloadMap = {
   };
   [WEBVIEW_TITLE_CHANGED]: { url: Server['url']; title: Server['title'] };
   [WEBVIEW_UNREAD_CHANGED]: { url: Server['url']; badge: Server['badge'] };
+  'trayIcon/clicked': void;
+  'trayIcon/balloonClicked': void;
+  'trayIcon/rootWindowActiveClicked': void;
+  'trayIcon/quitClicked': void;
 };

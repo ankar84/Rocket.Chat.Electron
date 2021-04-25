@@ -1,17 +1,15 @@
 import { app, BrowserWindow } from 'electron';
 import React, {
-  createContext,
   ReactElement,
   ReactNode,
   useCallback,
-  useContext,
   useEffect,
   useState,
 } from 'react';
 
-import { getRootWindow } from '../../../ui/main/rootWindow';
-
-const RootWindowContext = createContext(null as BrowserWindow | null);
+import { getRootWindow } from '../../../../ui/main/rootWindow';
+import RootWindowContext from './RootWindowContext';
+import { useTrayIconEvents } from './useTrayIconEvents';
 
 type RootWindowProps = {
   children?: ReactNode;
@@ -43,6 +41,8 @@ const RootWindow = ({ children }: RootWindowProps): ReactElement | null => {
     };
   }, [handleActivate]);
 
+  useTrayIconEvents(rootWindow);
+
   if (!rootWindow) {
     return null;
   }
@@ -55,13 +55,3 @@ const RootWindow = ({ children }: RootWindowProps): ReactElement | null => {
 };
 
 export default RootWindow;
-
-export const useRootWindow = (): BrowserWindow => {
-  const rootWindow = useContext(RootWindowContext);
-
-  if (!rootWindow) {
-    throw new Error('root window not provided');
-  }
-
-  return rootWindow;
-};

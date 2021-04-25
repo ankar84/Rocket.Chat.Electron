@@ -1,10 +1,9 @@
 import { useMemo } from 'react';
-import { useSelector } from 'react-redux';
 
-import { RootState } from '../../store/rootReducer';
+import { useAppSelector } from './useAppSelector';
 
 export const useGlobalBadge = (): '•' | number | undefined => {
-  const badges = useSelector((state: RootState) =>
+  const badges = useAppSelector((state) =>
     state.servers.map(({ badge }) => badge)
   );
 
