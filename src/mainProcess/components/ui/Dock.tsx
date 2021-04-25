@@ -1,21 +1,36 @@
 import { app } from 'electron';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useMemo } from 'react';
 
+import { useGlobalBadge } from '../../../common/hooks/useGlobalBadge';
 import { usePrevious } from '../../../common/hooks/usePrevious';
-import {
-  selectGlobalBadgeCount,
-  selectGlobalBadgeText,
-} from '../../../ui/selectors';
 
-const useDockState = (): void => {
-  const globalBadgeText = useSelector(selectGlobalBadgeText);
-  const globalBadgeCount = useSelector(selectGlobalBadgeCount);
-  const prevGlobalBadgeCount = usePrevious(globalBadgeCount);
+const useDockBadge = (globalBadge: number | '•' | undefined) => {
+  const globalBadgeText = useMemo(() => {
+    if (globalBadge === '•') {
+      return '•';
+    }
+
+    if (Number.isInteger(globalBadge)) {
+      return String(globalBadge);
+    }
+
+    return '';
+  }, [globalBadge]);
 
   useEffect(() => {
     app.dock.setBadge(globalBadgeText);
   }, [globalBadgeText]);
+};
+
+const useDockBounce = (globalBadge: number | '•' | undefined) => {
+  const globalBadgeCount = useMemo(() => {
+    if (globalBadge === undefined || globalBadge === '•') {
+      return 0;
+    }
+
+    return globalBadge;
+  }, [globalBadge]);
+  const prevGlobalBadgeCount = usePrevious(globalBadgeCount);
 
   useEffect(() => {
     if (globalBadgeCount <= 0 || (prevGlobalBadgeCount ?? 0) > 0) {
@@ -27,7 +42,10 @@ const useDockState = (): void => {
 };
 
 const Dock = (): null => {
-  useDockState();
+  const globalBadge = useGlobalBadge();
+
+  useDockBadge(globalBadge);
+  useDockBounce(globalBadge);
 
   return null;
 };
