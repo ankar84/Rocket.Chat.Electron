@@ -3006,6 +3006,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rocket.chat/null-react-renderer@workspace:packages/null-react-renderer":
+  version: 0.0.0-use.local
+  resolution: "@rocket.chat/null-react-renderer@workspace:packages/null-react-renderer"
+  dependencies:
+    "@rocket.chat/eslint-config-alt": ^0.6.3-dev.230
+    "@rocket.chat/prettier-config": ^0.6.3-dev.230
+    "@types/react": ^17.0.3
+    "@types/react-reconciler": ^0.26.1
+    eslint: ^7.25.0
+    npm-run-all: ^4.1.5
+    prettier: ^2.2.1
+    react: ^17.0.2
+    react-reconciler: ^0.26.2
+    rimraf: ^3.0.2
+    typescript: ^4.2.4
+  languageName: unknown
+  linkType: soft
+
 "@rocket.chat/prettier-config@npm:^0.6.3-dev.230":
   version: 0.6.3-dev.230
   resolution: "@rocket.chat/prettier-config@npm:0.6.3-dev.230"
@@ -3519,12 +3537,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^16.9.8":
-  version: 16.9.12
-  resolution: "@types/react-dom@npm:16.9.12"
+"@types/react-dom@npm:^17.0.3":
+  version: 17.0.3
+  resolution: "@types/react-dom@npm:17.0.3"
   dependencies:
-    "@types/react": ^16
-  checksum: 49745de25f49e3fff8e8dbc5751b3845ab3e5f732d03d89d5818148aa2dda1b002d8ddc7dc8976684c5dd9671cdbff8c270ea9f5c05c1349f65d233aaf135f25
+    "@types/react": "*"
+  checksum: 9314c91a985f153591e1e74aef3d63d8b22e098069773f32745bf0733740a49802731761a46da8788a7d3dd2c21346036f12c2c24627630e5a6210b120a650e6
+  languageName: node
+  linkType: hard
+
+"@types/react-reconciler@npm:^0.26.1":
+  version: 0.26.1
+  resolution: "@types/react-reconciler@npm:0.26.1"
+  dependencies:
+    "@types/react": "*"
+  checksum: 2a67e25a754231fb174c6baf09e1c4a2f03b0ddd2b6f8856cafa03dab591fde4a299bea246a57bb7d5b2a69fd8aa432eb2914607f1295faef1f483a665e9a0b0
   languageName: node
   linkType: hard
 
@@ -3540,7 +3567,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*":
+"@types/react@npm:*, @types/react@npm:^17.0.3":
   version: 17.0.3
   resolution: "@types/react@npm:17.0.3"
   dependencies:
@@ -3548,17 +3575,6 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: 5bcaabadc90a23ad9008540eae98a5819b638c4cf1b968adc67be47d6a8dc8cb100061d877dae97618fb275e405dc484b37154080c7ac0ea7df5efcdd8f98c24
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:^16, @types/react@npm:^16.9.48":
-  version: 16.14.5
-  resolution: "@types/react@npm:16.14.5"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: 76840cce4dae25a17b1f35950bb232b0bc98beceb45766695f4b0226758aff346cebd3830ffe5f67c3e0030ac24d3ea899750c46e49ee405a2b6d72e87a855ed
   languageName: node
   linkType: hard
 
@@ -12047,7 +12063,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.6.2, prop-types@npm:^15.7.2":
+"prop-types@npm:^15.7.2":
   version: 15.7.2
   resolution: "prop-types@npm:15.7.2"
   dependencies:
@@ -12183,17 +12199,16 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^16.13.1":
-  version: 16.14.0
-  resolution: "react-dom@npm:16.14.0"
+"react-dom@npm:^17.0.2":
+  version: 17.0.2
+  resolution: "react-dom@npm:17.0.2"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-    prop-types: ^15.6.2
-    scheduler: ^0.19.1
+    scheduler: ^0.20.2
   peerDependencies:
-    react: ^16.14.0
-  checksum: a13558f0e7c6d1a98684214460bcd4b9005500015b5048fb1b0d2856786b8764dbc713e6b078a5b1a56e17866400e1d862183c7a0a513ae8351de11f6f6749d2
+    react: 17.0.2
+  checksum: 960a74ff6670766846a73097a599115963df1574833c59ca0c2fd909758ebe7a6214cd14f5e6aa63ce846d8f39fde7f3b80474ccfcfadc45dd7f3246364718c6
   languageName: node
   linkType: hard
 
@@ -12235,6 +12250,19 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
+"react-reconciler@npm:^0.26.2":
+  version: 0.26.2
+  resolution: "react-reconciler@npm:0.26.2"
+  dependencies:
+    loose-envify: ^1.1.0
+    object-assign: ^4.1.1
+    scheduler: ^0.20.2
+  peerDependencies:
+    react: ^17.0.2
+  checksum: 5abd10272cd4c57f76ba1cc8c1c3c190b3a1208434bb9bb39f90816944b6780e59021d79d9d1d46f1d05276a0db9cd66f2ccc7f8bbb51bcf970320bcd1b21f69
+  languageName: node
+  linkType: hard
+
 "react-redux@npm:^7.2.1":
   version: 7.2.4
   resolution: "react-redux@npm:7.2.4"
@@ -12256,14 +12284,13 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"react@npm:^16.13.1":
-  version: 16.14.0
-  resolution: "react@npm:16.14.0"
+"react@npm:^17.0.2":
+  version: 17.0.2
+  resolution: "react@npm:17.0.2"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-    prop-types: ^15.6.2
-  checksum: 2769580b22952a52de3b5b2ea0f09cb904030b762d759739f49ab4da0b1f550e5c087ce3728c4be90f423d09481e0c075483c0c30b1ea9c549445c8b12020fd3
+  checksum: 7d0dfebafe1d297503157abb2e9acdb49852185deb8700c16f4a6faad87642f84903ab18cfc16f40b9a0dfe97540f99834982ee953e6d48b39c41608dc3e4b29
   languageName: node
   linkType: hard
 
@@ -12945,6 +12972,7 @@ resolve@^2.0.0-next.3:
     "@rocket.chat/fuselage": ^0.17.2
     "@rocket.chat/fuselage-hooks": ^0.17.2
     "@rocket.chat/icons": ^0.17.2
+    "@rocket.chat/null-react-renderer": "workspace:packages/null-react-renderer"
     "@rocket.chat/prettier-config": ^0.6.3-dev.230
     "@rollup/plugin-babel": ^5.2.0
     "@rollup/plugin-commonjs": ^15.1.0
@@ -12958,8 +12986,8 @@ resolve@^2.0.0-next.3:
     "@types/node": ^12.20.10
     "@types/node-fetch": ^2.5.7
     "@types/puppeteer": ^5.4.0
-    "@types/react": ^16.9.48
-    "@types/react-dom": ^16.9.8
+    "@types/react": ^17.0.3
+    "@types/react-dom": ^17.0.3
     "@types/react-redux": ^7.1.9
     "@types/resize-observer-browser": ^0.1.3
     "@types/rimraf": ^3.0.0
@@ -12983,8 +13011,8 @@ resolve@^2.0.0-next.3:
     npm-run-all: ^4.1.5
     prettier: ^2.2.1
     puppeteer: ^5.5.0
-    react: ^16.13.1
-    react-dom: ^16.13.1
+    react: ^17.0.2
+    react-dom: ^17.0.2
     react-i18next: ^11.7.3
     react-keyed-flatten-children: ^1.3.0
     react-redux: ^7.2.1
@@ -13129,13 +13157,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"scheduler@npm:^0.19.1":
-  version: 0.19.1
-  resolution: "scheduler@npm:0.19.1"
+"scheduler@npm:^0.20.2":
+  version: 0.20.2
+  resolution: "scheduler@npm:0.20.2"
   dependencies:
     loose-envify: ^1.1.0
     object-assign: ^4.1.1
-  checksum: 804f990b9f370cca6d42b65f3cba2cc2bfed4973ee5623bed1ea36a6627842db8c891e2e5ac003f06f9ee892d1d3396921e27fa077346caf0213af05776e8dee
+  checksum: 2ba121e53e8a438394598612ec9a8f465b39157042f912d2dd5956af643e0d45ec6937ae4eeb0a807d1945b209515263aed12fc3bca95c7a027ec2a54e76b399
   languageName: node
   linkType: hard
 
@@ -14562,6 +14590,16 @@ typescript@^4.0.3:
   languageName: node
   linkType: hard
 
+typescript@^4.2.4:
+  version: 4.2.4
+  resolution: "typescript@npm:4.2.4"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: edaede2fa77f56b7fba80ee624a2368ab1216e75b0434d968ccb47ab0a5e2f6d94f848b3b111c1237dd71e988cd376af26370dcdad3b94355c76e759f0dd0a1e
+  languageName: node
+  linkType: hard
+
 "typescript@patch:typescript@^4.0.3#builtin<compat/typescript>":
   version: 4.1.2
   resolution: "typescript@patch:typescript@npm%3A4.1.2#builtin<compat/typescript>::version=4.1.2&hash=a45b0e"
@@ -14569,6 +14607,16 @@ typescript@^4.0.3:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 6eb8f14f42b881bcfdaa47f68cf1d108fdb17ab687465198060358eba2f75e54b420f8aeacf2a3b17361c702b3cf2dd324cfb7d58647053c24bb7874cadd201c
+  languageName: node
+  linkType: hard
+
+"typescript@patch:typescript@^4.2.4#builtin<compat/typescript>":
+  version: 4.2.4
+  resolution: "typescript@patch:typescript@npm%3A4.2.4#builtin<compat/typescript>::version=4.2.4&hash=a45b0e"
+  bin:
+    tsc: bin/tsc
+    tsserver: bin/tsserver
+  checksum: 3be44317593182e8ce494c114e7ad9b0bb2553a22f3085cc6da4f0a36912c20850daa9be4c898af2ab6fc8b12f430c1c9e46ac715721867cd38643f2350d3ef9
   languageName: node
   linkType: hard
 
