@@ -41,6 +41,16 @@ const start = async (): Promise<void> => {
 
   await app.whenReady();
 
+  reduxStore.dispatch({
+    type: 'app/set-info',
+    payload: {
+      version: app.getVersion(),
+      path: app.getAppPath(),
+      locale: app.getLocale(),
+      platform: process.platform,
+    },
+  });
+
   const localStorage = await exportLocalStorage();
   await mergePersistableValues(localStorage);
   await setupServers(localStorage);

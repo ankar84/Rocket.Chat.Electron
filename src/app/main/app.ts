@@ -1,9 +1,7 @@
 import { app } from 'electron';
 import rimraf from 'rimraf';
 
-import { dispatch } from '../../store';
 import { getRootWindow } from '../../ui/main/rootWindow';
-import { APP_PATH_SET, APP_VERSION_SET } from '../actions';
 
 export const relaunchApp = (...args: string[]): void => {
   const command = process.argv.slice(1, app.isPackaged ? 1 : 2);
@@ -51,7 +49,4 @@ export const setupApp = (): void => {
   });
 
   app.addListener('window-all-closed', (): void => undefined);
-
-  dispatch({ type: APP_PATH_SET, payload: app.getAppPath() });
-  dispatch({ type: APP_VERSION_SET, payload: app.getVersion() });
 };

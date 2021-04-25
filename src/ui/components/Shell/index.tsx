@@ -1,7 +1,6 @@
 import React, { useLayoutEffect, FC } from 'react';
-import { useSelector } from 'react-redux';
 
-import { RootState } from '../../../store/rootReducer';
+import { useAppPath } from '../../../common/hooks/useAppPath';
 import { AboutDialog } from '../AboutDialog';
 import { AddServerView } from '../AddServerView';
 import DownloadsManagerView from '../DownloadsManagerView';
@@ -13,13 +12,9 @@ import { UpdateDialog } from '../UpdateDialog';
 import { GlobalStyles, Wrapper, WindowDragBar, ViewsWrapper } from './styles';
 
 export const Shell: FC = () => {
-  const appPath = useSelector(({ appPath }: RootState) => appPath);
+  const appPath = useAppPath();
 
   useLayoutEffect(() => {
-    if (!appPath) {
-      return undefined;
-    }
-
     const linkElement = document.createElement('link');
     linkElement.rel = 'stylesheet';
     linkElement.href = `${appPath}/app/icons/rocketchat.css`;

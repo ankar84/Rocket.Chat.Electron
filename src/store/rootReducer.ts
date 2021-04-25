@@ -1,7 +1,5 @@
-import { combineReducers } from 'redux';
+import { AnyAction, combineReducers, Reducer } from 'redux';
 
-import { appPath } from '../app/reducers/appPath';
-import { appVersion } from '../app/reducers/appVersion';
 import { downloads } from '../downloads/reducers/downloads';
 import {
   clientCertificates,
@@ -28,10 +26,10 @@ import {
   skippedUpdateVersion,
   updateError,
 } from '../updates/reducers';
+import { app } from './reducers/app';
 
-export const rootReducer = combineReducers({
-  appPath,
-  appVersion,
+const _rootReducer = combineReducers({
+  app,
   clientCertificates,
   currentView,
   doCheckForUpdatesOnStartup,
@@ -57,3 +55,8 @@ export const rootReducer = combineReducers({
 });
 
 export type RootState = ReturnType<typeof rootReducer>;
+
+export const rootReducer: Reducer<
+  ReturnType<typeof _rootReducer>,
+  AnyAction
+> = _rootReducer;

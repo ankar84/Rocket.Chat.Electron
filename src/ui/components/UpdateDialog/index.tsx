@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
 
+import { useAppVersion } from '../../../common/hooks/useAppVersion';
 import { RootAction } from '../../../store/actions';
 import { RootState } from '../../../store/rootReducer';
 import {
@@ -21,7 +22,7 @@ import {
 import { Dialog } from '../Dialog';
 
 export const UpdateDialog: FC = () => {
-  const currentVersion = useSelector(({ appVersion }: RootState) => appVersion);
+  const currentVersion = useAppVersion();
   const newVersion = useSelector(
     ({ newUpdateVersion }: RootState) => newUpdateVersion
   );

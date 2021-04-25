@@ -12,7 +12,7 @@ import { hasPayload, isErrored, isResponseTo } from './fsa';
 import { forwardToRenderers, getInitialState, forwardToMain } from './ipc';
 import { rootReducer, RootState } from './rootReducer';
 
-let reduxStore: Store<RootState>;
+let reduxStore: Store<RootState, RootAction>;
 
 let lastAction: RootAction;
 
@@ -23,7 +23,7 @@ const catchLastAction: Middleware = () => (next: Dispatch<RootAction>) => (
   return next(action);
 };
 
-export const createMainReduxStore = (): Store<RootState> => {
+export const createMainReduxStore = (): Store<RootState, RootAction> => {
   const middlewares = applyMiddleware(catchLastAction, forwardToRenderers);
 
   reduxStore = createStore(rootReducer, {}, middlewares);
@@ -31,7 +31,9 @@ export const createMainReduxStore = (): Store<RootState> => {
   return reduxStore;
 };
 
-export const createRendererReduxStore = async (): Promise<Store> => {
+export const createRendererReduxStore = async (): Promise<
+  Store<RootState, RootAction>
+> => {
   const initialState = await getInitialState();
   const composeEnhancers: typeof compose =
     (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

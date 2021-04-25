@@ -10,6 +10,7 @@ import { SpellCheckingActionTypeToPayloadMap } from '../spellChecking/actions';
 import { UiActionTypeToPayloadMap } from '../ui/actions';
 import { UpdatesActionTypeToPayloadMap } from '../updates/actions';
 import { UserPresenceActionTypeToPayloadMap } from '../userPresence/actions';
+import { app } from './reducers/app';
 
 type ActionTypeToPayloadMap = AppActionTypeToPayloadMap &
   DeepLinksActionTypeToPayloadMap &
@@ -37,4 +38,6 @@ type RootActions = {
 
 export type ActionOf<Type extends keyof RootActions> = RootActions[Type];
 
-export type RootAction = RootActions[keyof RootActions];
+export type RootAction =
+  | RootActions[keyof RootActions]
+  | Parameters<typeof app>[1];
