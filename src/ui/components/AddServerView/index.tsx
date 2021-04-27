@@ -20,15 +20,15 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
-import { useAppSelector } from '../../../common/hooks/useAppSelector';
 import {
   SERVER_URL_RESOLVED,
   SERVER_URL_RESOLUTION_REQUESTED,
-} from '../../../servers/actions';
+} from '../../../common/actions/serversActions';
+import { ADD_SERVER_VIEW_SERVER_ADDED } from '../../../common/actions/uiActions';
+import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
+import { useAppSelector } from '../../../common/hooks/useAppSelector';
 import { ServerUrlResolutionStatus } from '../../../servers/common';
 import { request } from '../../../store';
-import { ADD_SERVER_VIEW_SERVER_ADDED } from '../../actions';
 import { RocketChatLogo } from '../RocketChatLogo';
 import { Wrapper } from './styles';
 

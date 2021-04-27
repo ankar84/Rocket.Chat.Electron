@@ -1,9 +1,5 @@
 import { Notification, nativeImage, NativeImage } from 'electron';
 
-import { invoke } from '../ipc/main';
-import { dispatch, listen } from '../store';
-import { isResponse } from '../store/fsa';
-import { getRootWindow } from '../ui/main/rootWindow';
 import {
   NOTIFICATIONS_CREATE_REQUESTED,
   NOTIFICATIONS_CREATE_RESPONDED,
@@ -13,8 +9,12 @@ import {
   NOTIFICATIONS_NOTIFICATION_REPLIED,
   NOTIFICATIONS_NOTIFICATION_ACTIONED,
   NOTIFICATIONS_NOTIFICATION_DISMISSED,
-} from './actions';
-import { ExtendedNotificationOptions } from './common';
+} from '../common/actions/notificationActions';
+import { isResponse } from '../common/helpers/actions';
+import { ExtendedNotificationOptions } from '../common/types/ExtendedNotificationOptions';
+import { invoke } from '../ipc/main';
+import { dispatch, listen } from '../store';
+import { getRootWindow } from '../ui/main/rootWindow';
 
 const resolveIcon = async (
   iconUrl: string | undefined

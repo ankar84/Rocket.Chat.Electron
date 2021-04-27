@@ -1,5 +1,5 @@
+import { WEBVIEW_UNREAD_CHANGED } from '../../common/actions/uiActions';
 import { dispatch } from '../../store';
-import { WEBVIEW_UNREAD_CHANGED } from '../../ui/actions';
 import { Server } from '../common';
 import { getServerUrl } from './urls';
 

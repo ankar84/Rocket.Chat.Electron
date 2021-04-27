@@ -3,15 +3,15 @@ import { Certificate } from 'electron';
 import React, { FC, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
-import { useAppSelector } from '../../../common/hooks/useAppSelector';
 import {
   CERTIFICATES_CLIENT_CERTIFICATE_REQUESTED,
   SELECT_CLIENT_CERTIFICATE_DIALOG_CERTIFICATE_SELECTED,
   SELECT_CLIENT_CERTIFICATE_DIALOG_DISMISSED,
-} from '../../../navigation/actions';
+} from '../../../common/actions/navigationActions';
+import { isResponse } from '../../../common/helpers/actions';
+import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
+import { useAppSelector } from '../../../common/hooks/useAppSelector';
 import { listen } from '../../../store';
-import { isResponse } from '../../../store/fsa';
 import { Dialog } from '../Dialog';
 
 export const SelectClientCertificateDialog: FC = () => {

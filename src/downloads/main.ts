@@ -9,13 +9,13 @@ import {
   webContents,
 } from 'electron';
 
-import { handle } from '../ipc/main';
-import { dispatch, select } from '../store';
 import {
   DOWNLOAD_CREATED,
   DOWNLOAD_REMOVED,
   DOWNLOAD_UPDATED,
-} from './actions';
+} from '../common/actions/downloadsActions';
+import { handle } from '../ipc/main';
+import { dispatch, select } from '../store';
 import { Download, DownloadStatus } from './common';
 
 const items = new Map<Download['itemId'], DownloadItem>();

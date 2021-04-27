@@ -4,15 +4,15 @@ import path from 'path';
 import { app } from 'electron';
 import { satisfies, coerce } from 'semver';
 
-import { invoke } from '../ipc/main';
-import { select, dispatch, listen } from '../store';
-import { hasMeta } from '../store/fsa';
-import { getRootWindow } from '../ui/main/rootWindow';
 import {
   SERVER_URL_RESOLUTION_REQUESTED,
   SERVER_URL_RESOLVED,
   SERVERS_LOADED,
-} from './actions';
+} from '../common/actions/serversActions';
+import { hasMeta } from '../common/helpers/actions';
+import { invoke } from '../ipc/main';
+import { select, dispatch, listen } from '../store';
+import { getRootWindow } from '../ui/main/rootWindow';
 import {
   ServerUrlResolutionStatus,
   Server,

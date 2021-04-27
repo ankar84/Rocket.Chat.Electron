@@ -3,10 +3,10 @@ import { desktopCapturer, DesktopCapturerSource } from 'electron';
 import React, { useEffect, useState, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { SCREEN_SHARING_DIALOG_DISMISSED } from '../../../common/actions/screenSharingActions';
+import { WEBVIEW_SCREEN_SHARING_SOURCE_RESPONDED } from '../../../common/actions/uiActions';
 import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
 import { useAppSelector } from '../../../common/hooks/useAppSelector';
-import { SCREEN_SHARING_DIALOG_DISMISSED } from '../../../screenSharing/actions';
-import { WEBVIEW_SCREEN_SHARING_SOURCE_RESPONDED } from '../../actions';
 import { Dialog } from '../Dialog';
 import { Source } from './styles';
 

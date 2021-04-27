@@ -8,20 +8,24 @@ import {
 import React, { useEffect, useRef, FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
-import { useAppSelector } from '../../../common/hooks/useAppSelector';
-import { useAppVersion } from '../../../common/hooks/useAppVersion';
 import {
   UPDATE_DIALOG_SKIP_UPDATE_CLICKED,
   UPDATE_DIALOG_REMIND_UPDATE_LATER_CLICKED,
   UPDATE_DIALOG_INSTALL_BUTTON_CLICKED,
   UPDATE_DIALOG_DISMISSED,
-} from '../../actions';
+} from '../../../common/actions/uiActions';
+import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
+import { useAppSelector } from '../../../common/hooks/useAppSelector';
+import { useAppVersion } from '../../../common/hooks/useAppVersion';
 import { Dialog } from '../Dialog';
 
 export const UpdateDialog: FC = () => {
   const currentVersion = useAppVersion();
-  const newVersion = useAppSelector(({ newUpdateVersion }) => newUpdateVersion);
+  const newVersion = useAppSelector(({ updates }) =>
+    updates.updateCheck?.status === 'fulfilled'
+      ? updates.updateCheck.newVersion
+      : null
+  );
   const openDialog = useAppSelector(({ openDialog }) => openDialog);
   const isVisible = openDialog === 'update';
 
@@ -40,7 +44,7 @@ export const UpdateDialog: FC = () => {
   }, [isVisible]);
 
   const handleSkipButtonClick = (): void => {
-    dispatch({ type: UPDATE_DIALOG_SKIP_UPDATE_CLICKED, payload: newVersion });
+    dispatch({ type: UPDATE_DIALOG_SKIP_UPDATE_CLICKED });
   };
 
   const handleRemindLaterButtonClick = (): void => {

@@ -10,14 +10,12 @@ import { useUniqueId, useAutoFocus } from '@rocket.chat/fuselage-hooks';
 import React, { useState, useEffect, FC, ChangeEvent } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
 
+import { ABOUT_DIALOG_DISMISSED } from '../../../common/actions/uiActions';
+import * as updateCheckActions from '../../../common/actions/updateCheckActions';
+import * as updatesActions from '../../../common/actions/updatesActions';
 import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
 import { useAppSelector } from '../../../common/hooks/useAppSelector';
 import { useAppVersion } from '../../../common/hooks/useAppVersion';
-import { UPDATES_CHECK_FOR_UPDATES_REQUESTED } from '../../../updates/actions';
-import {
-  ABOUT_DIALOG_TOGGLE_UPDATE_ON_START,
-  ABOUT_DIALOG_DISMISSED,
-} from '../../actions';
 import { Dialog } from '../Dialog';
 import { RocketChatLogo } from '../RocketChatLogo';
 
@@ -26,25 +24,17 @@ const copyright = `© 2016-${new Date().getFullYear()}, Rocket.Chat`;
 export const AboutDialog: FC = () => {
   const appVersion = useAppVersion();
   const doCheckForUpdatesOnStartup = useAppSelector(
-    ({ doCheckForUpdatesOnStartup }) => doCheckForUpdatesOnStartup
+    ({ updates }) => updates.settings.checkOnStartup
   );
-  const isCheckingForUpdates = useAppSelector(
-    ({ isCheckingForUpdates }) => isCheckingForUpdates
-  );
+  const checking = useAppSelector(({ updates }) => updates.updateCheck);
   const isEachUpdatesSettingConfigurable = useAppSelector(
-    ({ isEachUpdatesSettingConfigurable }) => isEachUpdatesSettingConfigurable
+    ({ updates }) => updates.settings.editable
   );
-  const isUpdatingAllowed = useAppSelector(
-    ({ isUpdatingAllowed }) => isUpdatingAllowed
-  );
+  const isUpdatingAllowed = useAppSelector(({ updates }) => updates.allowed);
   const isUpdatingEnabled = useAppSelector(
-    ({ isUpdatingEnabled }) => isUpdatingEnabled
-  );
-  const newUpdateVersion = useAppSelector(
-    ({ newUpdateVersion }) => newUpdateVersion
+    ({ updates }) => updates.settings.enabled
   );
   const openDialog = useAppSelector(({ openDialog }) => openDialog);
-  const updateError = useAppSelector(({ updateError }) => updateError);
 
   const isVisible = openDialog === 'about';
   const canUpdate = isUpdatingAllowed && isUpdatingEnabled;
@@ -63,7 +53,7 @@ export const AboutDialog: FC = () => {
   ] = useState([false, null]);
 
   useEffect(() => {
-    if (updateError) {
+    if (checking?.status === 'rejected') {
       setCheckingForUpdates([
         true,
         t('dialog.about.errorWhenLookingForUpdates'),
@@ -78,12 +68,12 @@ export const AboutDialog: FC = () => {
       };
     }
 
-    if (isCheckingForUpdates) {
+    if (checking?.status === 'pending') {
       setCheckingForUpdates([true, null]);
       return undefined;
     }
 
-    if (newUpdateVersion) {
+    if (checking?.newVersion) {
       setCheckingForUpdates([false, null]);
       return undefined;
     }
@@ -96,19 +86,16 @@ export const AboutDialog: FC = () => {
     return () => {
       clearTimeout(messageTimer);
     };
-  }, [updateError, isCheckingForUpdates, newUpdateVersion, t]);
+  }, [checking, t]);
 
   const handleCheckForUpdatesButtonClick = (): void => {
-    dispatch({ type: UPDATES_CHECK_FOR_UPDATES_REQUESTED });
+    dispatch(updateCheckActions.requested());
   };
 
   const handleCheckForUpdatesOnStartCheckBoxChange = (
     event: ChangeEvent<HTMLInputElement>
   ): void => {
-    dispatch({
-      type: ABOUT_DIALOG_TOGGLE_UPDATE_ON_START,
-      payload: event.target.checked,
-    });
+    dispatch(updatesActions.checkOnStartupToggled(event.target.checked));
   };
 
   const checkForUpdatesButtonRef = useAutoFocus(isVisible);

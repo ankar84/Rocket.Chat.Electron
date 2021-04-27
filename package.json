@@ -48,6 +48,7 @@
     "@bugsnag/js": "^7.3.5",
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
+    "@reduxjs/toolkit": "^1.5.1",
     "@rocket.chat/css-in-js": "^0.17.2",
     "@rocket.chat/fuselage": "^0.17.2",
     "@rocket.chat/fuselage-hooks": "^0.17.2",

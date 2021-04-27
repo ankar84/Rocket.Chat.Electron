@@ -1,11 +1,11 @@
 import { useState, DragEvent } from 'react';
 
-import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
-import { Server } from '../../../servers/common';
 import {
   SIDE_BAR_SERVERS_SORTED,
   SIDE_BAR_SERVER_SELECTED,
-} from '../../actions';
+} from '../../../common/actions/uiActions';
+import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
+import { Server } from '../../../servers/common';
 
 export const useSorting = <S extends Server>(
   servers: S[]

@@ -1,0 +1,22 @@
+{
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.options": {
+    "extensions": [".js", ".jsx", ".md", ".mdx", ".ts", ".tsx"]
+  },
+  "eslint.workingDirectories": [
+    {
+      "directory": "packages/null-react-renderer",
+      "changeProcessCWD": true
+    },
+    {
+      "directory": "packages/redux-over-electron",
+      "changeProcessCWD": true
+    },
+    {
+      "directory": ".",
+      "changeProcessCWD": true
+    },
+  ]
+}

@@ -1,7 +1,7 @@
 import Bugsnag from '@bugsnag/js';
 import { app } from 'electron';
 
-import { APP_ERROR_THROWN } from './app/actions';
+import * as appActions from './common/actions/appActions';
 import { select, dispatch, listen } from './store';
 import { whenReady } from './whenReady';
 
@@ -44,7 +44,7 @@ export const setupMainErrorHandling = async (): Promise<void> => {
 
   await app.whenReady();
 
-  listen(APP_ERROR_THROWN, (action) => {
+  listen(appActions.errorThrown.type, (action) => {
     console.error(action.payload);
   });
 };
@@ -66,23 +66,11 @@ export const setupRendererErrorHandling = async (
     return;
   }
 
-  const dispatchError = (error: Error): void => {
-    dispatch({
-      type: APP_ERROR_THROWN,
-      payload: {
-        message: error.message,
-        stack: error.stack,
-        name: error.name,
-      },
-      error: true,
-    });
-  };
-
   window.addEventListener('error', (event): void => {
-    dispatchError(event.error);
+    dispatch(appActions.errorThrown(event.error));
   });
 
   window.addEventListener('unhandledrejection', (event): void => {
-    dispatchError(event.reason);
+    dispatch(appActions.rejectionUnhandled(event.reason));
   });
 };

@@ -13,7 +13,7 @@ export const ServersView: FC = () => {
       ({ servers }: RootState) => servers,
       (currentView, servers) =>
         servers.map((server) =>
-          Object.assign(server, {
+          Object.assign({}, server, {
             selected:
               typeof currentView === 'object'
                 ? server.url === currentView.url

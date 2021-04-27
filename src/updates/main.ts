@@ -4,12 +4,18 @@ import path from 'path';
 import { app } from 'electron';
 import { autoUpdater } from 'electron-updater';
 
-import { listen, dispatch, select } from '../store';
-import { RootState } from '../store/rootReducer';
 import {
   UPDATE_DIALOG_SKIP_UPDATE_CLICKED,
   UPDATE_DIALOG_INSTALL_BUTTON_CLICKED,
-} from '../ui/actions';
+} from '../common/actions/uiActions';
+import * as updateActions from '../common/actions/updateActions';
+import * as updateCheckActions from '../common/actions/updateCheckActions';
+import * as updatesActions from '../common/actions/updatesActions';
+import { AppLevelUpdateConfiguration } from '../common/types/AppLevelUpdateConfiguration';
+import { UpdateConfiguration } from '../common/types/UpdateConfiguration';
+import { UserLevelUpdateConfiguration } from '../common/types/UserLevelUpdateConfiguration';
+import { listen, dispatch, select } from '../store';
+import { RootState } from '../store/rootReducer';
 import {
   askUpdateInstall,
   AskUpdateInstallResponse,
@@ -17,20 +23,6 @@ import {
   warnAboutUpdateDownload,
   warnAboutUpdateSkipped,
 } from '../ui/main/dialogs';
-import {
-  UPDATE_SKIPPED,
-  UPDATES_CHECK_FOR_UPDATES_REQUESTED,
-  UPDATES_CHECKING_FOR_UPDATE,
-  UPDATES_ERROR_THROWN,
-  UPDATES_NEW_VERSION_AVAILABLE,
-  UPDATES_NEW_VERSION_NOT_AVAILABLE,
-  UPDATES_READY,
-} from './actions';
-import {
-  AppLevelUpdateConfiguration,
-  UpdateConfiguration,
-  UserLevelUpdateConfiguration,
-} from './common';
 
 const readJsonObject = async (
   filePath: string
@@ -110,22 +102,16 @@ export const mergeConfigurations = (
 };
 
 const loadConfiguration = async (): Promise<UpdateConfiguration> => {
-  const defaultConfiguration = select(
-    ({
-      isUpdatingEnabled,
-      doCheckForUpdatesOnStartup,
-      skippedUpdateVersion,
-    }: RootState) => ({
-      isUpdatingAllowed:
-        (process.platform === 'linux' && !!process.env.APPIMAGE) ||
-        (process.platform === 'win32' && !process.windowsStore) ||
-        (process.platform === 'darwin' && !process.mas),
-      isEachUpdatesSettingConfigurable: true,
-      isUpdatingEnabled,
-      doCheckForUpdatesOnStartup,
-      skippedUpdateVersion,
-    })
-  );
+  const defaultConfiguration = select(({ updates }: RootState) => ({
+    isUpdatingAllowed:
+      (process.platform === 'linux' && !!process.env.APPIMAGE) ||
+      (process.platform === 'win32' && !process.windowsStore) ||
+      (process.platform === 'darwin' && !process.mas),
+    isEachUpdatesSettingConfigurable: true,
+    isUpdatingEnabled: updates.settings.enabled,
+    doCheckForUpdatesOnStartup: updates.settings.checkOnStartup,
+    skippedUpdateVersion: updates.settings.skippedVersion,
+  }));
   const appConfiguration = await loadAppConfiguration();
   const userConfiguration = await loadUserConfiguration();
 
@@ -134,6 +120,14 @@ const loadConfiguration = async (): Promise<UpdateConfiguration> => {
     appConfiguration,
     userConfiguration
   );
+};
+
+const checkForUpdates = async (): Promise<void> => {
+  try {
+    await autoUpdater.checkForUpdates();
+  } catch (error) {
+    dispatch(updateCheckActions.failed(error));
+  }
 };
 
 export const setupUpdates = async (): Promise<void> => {
@@ -147,42 +141,38 @@ export const setupUpdates = async (): Promise<void> => {
     skippedUpdateVersion,
   } = await loadConfiguration();
 
-  dispatch({
-    type: UPDATES_READY,
-    payload: {
+  dispatch(
+    updatesActions.ready({
       isUpdatingAllowed,
       isEachUpdatesSettingConfigurable,
       isUpdatingEnabled,
       doCheckForUpdatesOnStartup,
       skippedUpdateVersion,
-    },
-  });
+    })
+  );
 
   if (!isUpdatingAllowed || !isUpdatingEnabled) {
     return;
   }
 
   autoUpdater.addListener('checking-for-update', () => {
-    dispatch({ type: UPDATES_CHECKING_FOR_UPDATE });
+    dispatch(updateCheckActions.started());
   });
 
   autoUpdater.addListener('update-available', ({ version }) => {
     const skippedUpdateVersion = select(
-      ({ skippedUpdateVersion }) => skippedUpdateVersion
+      ({ updates }) => updates.settings.skippedVersion
     );
     if (skippedUpdateVersion === version) {
-      dispatch({ type: UPDATES_NEW_VERSION_NOT_AVAILABLE });
+      dispatch(updateCheckActions.updateNotAvailable());
       return;
     }
 
-    dispatch({
-      type: UPDATES_NEW_VERSION_AVAILABLE,
-      payload: version as string,
-    });
+    dispatch(updateCheckActions.updateAvailable(version));
   });
 
   autoUpdater.addListener('update-not-available', () => {
-    dispatch({ type: UPDATES_NEW_VERSION_NOT_AVAILABLE });
+    dispatch(updateCheckActions.updateNotAvailable());
   });
 
   autoUpdater.addListener('update-downloaded', async () => {
@@ -197,64 +187,25 @@ export const setupUpdates = async (): Promise<void> => {
       app.removeAllListeners('window-all-closed');
       autoUpdater.quitAndInstall(true, true);
     } catch (error) {
-      dispatch({
-        type: UPDATES_ERROR_THROWN,
-        payload: {
-          message: error.message,
-          stack: error.stack,
-          name: error.name,
-        },
-      });
+      dispatch(updateCheckActions.failed(error));
     }
   });
 
   autoUpdater.addListener('error', (error) => {
-    dispatch({
-      type: UPDATES_ERROR_THROWN,
-      payload: {
-        message: error.message,
-        stack: error.stack,
-        name: error.name,
-      },
-    });
+    dispatch(updateCheckActions.failed(error));
   });
 
   if (doCheckForUpdatesOnStartup) {
-    try {
-      await autoUpdater.checkForUpdates();
-    } catch (error) {
-      dispatch({
-        type: UPDATES_ERROR_THROWN,
-        payload: {
-          message: error.message,
-          stack: error.stack,
-          name: error.name,
-        },
-      });
-    }
+    checkForUpdates();
   }
 
-  listen(UPDATES_CHECK_FOR_UPDATES_REQUESTED, async () => {
-    try {
-      await autoUpdater.checkForUpdates();
-    } catch (error) {
-      dispatch({
-        type: UPDATES_ERROR_THROWN,
-        payload: {
-          message: error.message,
-          stack: error.stack,
-          name: error.name,
-        },
-      });
-    }
+  listen(updateCheckActions.requested.type, async () => {
+    checkForUpdates();
   });
 
-  listen(UPDATE_DIALOG_SKIP_UPDATE_CLICKED, async (action) => {
+  listen(UPDATE_DIALOG_SKIP_UPDATE_CLICKED, async () => {
     await warnAboutUpdateSkipped();
-    dispatch({
-      type: UPDATE_SKIPPED,
-      payload: action.payload,
-    });
+    dispatch(updateActions.skipped());
   });
 
   listen(UPDATE_DIALOG_INSTALL_BUTTON_CLICKED, async () => {
@@ -263,14 +214,7 @@ export const setupUpdates = async (): Promise<void> => {
     try {
       autoUpdater.downloadUpdate();
     } catch (error) {
-      dispatch({
-        type: UPDATES_ERROR_THROWN,
-        payload: {
-          message: error.message,
-          stack: error.stack,
-          name: error.name,
-        },
-      });
+      dispatch(updateActions.downloadFailed(error));
     }
   });
 };

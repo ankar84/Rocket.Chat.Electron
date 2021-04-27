@@ -9,14 +9,14 @@ import { TFunction } from 'i18next';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import {
+  TOUCH_BAR_FORMAT_BUTTON_TOUCHED,
+  TOUCH_BAR_SELECT_SERVER_TOUCHED,
+} from '../../../common/actions/uiActions';
 import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
 import { useAppPath } from '../../../common/hooks/useAppPath';
 import { useAppSelector } from '../../../common/hooks/useAppSelector';
 import { Server } from '../../../servers/common';
-import {
-  TOUCH_BAR_FORMAT_BUTTON_TOUCHED,
-  TOUCH_BAR_SELECT_SERVER_TOUCHED,
-} from '../../../ui/actions';
 import { useRootWindow } from './RootWindow';
 
 const useServerSelectionScrubber = () => {

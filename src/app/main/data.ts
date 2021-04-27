@@ -3,10 +3,43 @@ import path from 'path';
 
 import { app } from 'electron';
 
+import * as appActions from '../../common/actions/appActions';
 import { select, dispatch, watch } from '../../store';
-import { APP_SETTINGS_LOADED } from '../actions';
+import { PersistableValues } from '../PersistableValues';
 import { selectPersistableValues } from '../selectors';
 import { getPersistedValues, persistValues } from './persistence';
+
+const extractPersitableValues = ({
+  currentView,
+  downloads,
+  isMenuBarEnabled,
+  isShowWindowOnUnreadChangedEnabled,
+  isSideBarEnabled,
+  isTrayIconEnabled,
+  rootWindowState,
+  servers,
+  trustedCertificates,
+  externalProtocols,
+  isEachUpdatesSettingConfigurable,
+  doCheckForUpdatesOnStartup,
+  isUpdatingEnabled,
+  skippedUpdateVersion,
+}: PersistableValues): PersistableValues => ({
+  currentView,
+  downloads,
+  isMenuBarEnabled,
+  isShowWindowOnUnreadChangedEnabled,
+  isSideBarEnabled,
+  isTrayIconEnabled,
+  rootWindowState,
+  servers,
+  trustedCertificates,
+  externalProtocols,
+  isEachUpdatesSettingConfigurable,
+  doCheckForUpdatesOnStartup,
+  isUpdatingEnabled,
+  skippedUpdateVersion,
+});
 
 export const mergePersistableValues = async (
   localStorage: Record<string, string>
@@ -25,7 +58,7 @@ export const mergePersistableValues = async (
     })
   );
 
-  let values = selectPersistableValues({
+  let values = extractPersitableValues({
     ...initialValues,
     ...electronStoreValues,
     ...localStorageValues,
@@ -102,10 +135,7 @@ export const mergePersistableValues = async (
     },
   };
 
-  dispatch({
-    type: APP_SETTINGS_LOADED,
-    payload: values,
-  });
+  dispatch(appActions.settingsLoaded(values));
 };
 
 export const watchAndPersistChanges = (): void => {

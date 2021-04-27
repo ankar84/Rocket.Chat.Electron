@@ -1,11 +1,11 @@
 import { WebviewTag } from 'electron';
 import React, { useRef, useEffect, FC } from 'react';
 
-import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
 import {
   LOADING_ERROR_VIEW_RELOAD_SERVER_CLICKED,
   WEBVIEW_ATTACHED,
-} from '../../actions';
+} from '../../../common/actions/uiActions';
+import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
 import ErrorView from './ErrorView';
 import { StyledWebView, Wrapper } from './styles';
 

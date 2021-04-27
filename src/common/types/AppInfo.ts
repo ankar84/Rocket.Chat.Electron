@@ -1,7 +1,7 @@
 export type AppInfo = {
-  name: string;
-  version: string;
-  path: string;
-  platform: NodeJS.Platform;
-  locale: string;
+  readonly name: string;
+  readonly version: string;
+  readonly path: string;
+  readonly platform: NodeJS.Platform;
+  readonly locale: string;
 };

@@ -3,11 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { relaunchApp } from '../../../app/main/app';
-import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
-import { useAppName } from '../../../common/hooks/useAppName';
-import { useAppPlatform } from '../../../common/hooks/useAppPlatform';
-import { useAppSelector } from '../../../common/hooks/useAppSelector';
-import { CERTIFICATES_CLEARED } from '../../../navigation/actions';
+import { CERTIFICATES_CLEARED } from '../../../common/actions/navigationActions';
 import {
   MENU_BAR_ABOUT_CLICKED,
   MENU_BAR_ADD_NEW_SERVER_CLICKED,
@@ -17,7 +13,11 @@ import {
   MENU_BAR_TOGGLE_IS_SIDE_BAR_ENABLED_CLICKED,
   MENU_BAR_TOGGLE_IS_TRAY_ICON_ENABLED_CLICKED,
   SIDE_BAR_DOWNLOADS_BUTTON_CLICKED,
-} from '../../../ui/actions';
+} from '../../../common/actions/uiActions';
+import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
+import { useAppName } from '../../../common/hooks/useAppName';
+import { useAppPlatform } from '../../../common/hooks/useAppPlatform';
+import { useAppSelector } from '../../../common/hooks/useAppSelector';
 import { askForAppDataReset } from '../../../ui/main/dialogs';
 import { getWebContentsByServerUrl } from '../../../ui/main/serverView';
 import { useRootWindow } from './RootWindow';

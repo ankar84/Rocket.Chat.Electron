@@ -2,11 +2,11 @@ import { parse } from 'url';
 
 import React, { useMemo, FC, DragEvent, MouseEvent } from 'react';
 
-import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
 import {
   SIDE_BAR_SERVER_SELECTED,
   SIDE_BAR_CONTEXT_MENU_TRIGGERED,
-} from '../../actions';
+} from '../../../common/actions/uiActions';
+import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
 import {
   Avatar,
   Badge,

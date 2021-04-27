@@ -1,52 +1,25 @@
-import {
-  forwardToMain,
-  forwardToRenderers,
-  getInitialState,
-} from '@rocket.chat/redux-over-electron';
-import {
-  applyMiddleware,
-  createStore,
-  Store,
-  compose,
-  Middleware,
-  Dispatch,
-} from 'redux';
+import { Store } from 'redux';
 
-import { RootAction } from './actions';
-import { hasPayload, isErrored, isResponseTo } from './fsa';
-import { rootReducer, RootState } from './rootReducer';
+import { hasPayload, isErrored, isResponseTo } from '../common/helpers/actions';
+import { createMainReduxStore as _createMainReduxStore } from '../mainProcess/createMainReduxStore';
+import { createRendererReduxStore as _createRendererReduxStore } from '../rendererProcess/createRendererReduxStore';
+import { lastAction } from './catchLastAction';
+import { RootAction } from './rootAction';
+import { RootState } from './rootReducer';
 
 let reduxStore: Store<RootState, RootAction>;
 
-let lastAction: RootAction;
-
-const catchLastAction: Middleware = () => (next: Dispatch<RootAction>) => (
-  action
-) => {
-  lastAction = action;
-  return next(action);
-};
-
-export const createMainReduxStore = (): Store<RootState, RootAction> => {
-  const middlewares = applyMiddleware(catchLastAction, forwardToRenderers);
-
-  reduxStore = createStore(rootReducer, {}, middlewares);
-
+export const createMainReduxStore = async (): Promise<
+  Store<RootState, RootAction>
+> => {
+  reduxStore = await _createMainReduxStore();
   return reduxStore;
 };
 
 export const createRendererReduxStore = async (): Promise<
   Store<RootState, RootAction>
 > => {
-  const initialState = await getInitialState();
-  const composeEnhancers: <R>(a: R) => R =
-    (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-  const enhancers = composeEnhancers(
-    applyMiddleware(forwardToMain, catchLastAction)
-  );
-
-  reduxStore = createStore(rootReducer, initialState, enhancers);
-
+  reduxStore = await _createRendererReduxStore();
   return reduxStore;
 };
 
@@ -98,7 +71,9 @@ export const listen: {
     typeof typeOrPredicate === 'function'
       ? typeOrPredicate
       : (action: RootAction): action is Action =>
-          action.type === typeOrPredicate;
+          action === undefined
+            ? (console.trace(), false)
+            : action.type === typeOrPredicate;
 
   return reduxStore.subscribe(() => {
     if (!effectivePredicate(lastAction)) {

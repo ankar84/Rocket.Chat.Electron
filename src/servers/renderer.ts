@@ -2,10 +2,10 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { createStructuredSelector } from 'reselect';
 
+import { ROOT_WINDOW_ICON_CHANGED } from '../common/actions/uiActions';
 import { handle } from '../ipc/renderer';
 import { dispatch, watch } from '../store';
 import { RootState } from '../store/rootReducer';
-import { ROOT_WINDOW_ICON_CHANGED } from '../ui/actions';
 import Badge from '../ui/icons/Badge';
 import { Server } from './common';
 
