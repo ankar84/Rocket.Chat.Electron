@@ -41,7 +41,9 @@ type ServersActionTypes =
   | ActionOf<typeof APP_SETTINGS_LOADED>
   | ActionOf<typeof WEBVIEW_DID_START_LOADING>
   | ActionOf<typeof WEBVIEW_DID_FAIL_LOAD>
-  | ActionOf<typeof WEBVIEW_ATTACHED>;
+  | ActionOf<typeof WEBVIEW_ATTACHED>
+  | ActionOf<'webview/userPresenceParametersChanged'>
+  | ActionOf<'server/idleStateChanged'>;
 
 const upsert = (state: Server[], server: Server): Server[] => {
   const index = state.findIndex(({ url }) => url === server.url);
@@ -110,6 +112,11 @@ export const servers: Reducer<Server[], ServersActionTypes> = (
       return upsert(state, { url, favicon });
     }
 
+    case 'webview/userPresenceParametersChanged': {
+      const { url, isAutoAwayEnabled, idleThreshold } = action.payload;
+      return upsert(state, { url, isAutoAwayEnabled, idleThreshold });
+    }
+
     case WEBVIEW_DID_NAVIGATE: {
       const { url, pageUrl } = action.payload;
       if (pageUrl?.includes(url)) {
@@ -152,6 +159,11 @@ export const servers: Reducer<Server[], ServersActionTypes> = (
     case WEBVIEW_ATTACHED: {
       const { url, webContentsId } = action.payload;
       return update(state, { url, webContentsId });
+    }
+
+    case 'server/idleStateChanged': {
+      const { url, idleState } = action.payload;
+      return upsert(state, { url, idleState });
     }
 
     default:

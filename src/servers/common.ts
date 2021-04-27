@@ -1,3 +1,5 @@
+import { SystemIdleState } from '../common/types/SystemIdleState';
+
 export type Server = {
   url: string;
   title?: string;
@@ -10,6 +12,9 @@ export type Server = {
   lastPath?: string;
   failed?: boolean;
   webContentsId?: number;
+  isAutoAwayEnabled?: boolean;
+  idleThreshold?: number | null;
+  idleState?: SystemIdleState;
 };
 
 export const enum ServerUrlResolutionStatus {

@@ -1,64 +1,40 @@
-import { invoke } from '../ipc/renderer';
-import { listen } from '../store';
-import { SYSTEM_SUSPENDING, SYSTEM_LOCKING_SCREEN } from './actions';
-import { SystemIdleState } from './common';
+import { getServerUrl } from '../servers/preload/urls';
+import { dispatch, watch } from '../store';
 
 let isAutoAwayEnabled: boolean;
 let idleThreshold: number | null;
 let goOnline = (): void => undefined;
 let goAway = (): void => undefined;
 
-const setupUserPresenceListening = (): void => {
-  let prevState: SystemIdleState;
-  const pollSystemIdleState = async (): Promise<void> => {
-    if (!isAutoAwayEnabled || !idleThreshold) {
-      return;
-    }
-
-    const state = await invoke(
-      'power-monitor/get-system-idle-state',
-      idleThreshold
-    );
-
-    if (prevState === state) {
-      setTimeout(pollSystemIdleState, 1000);
-      return;
-    }
-
-    const isOnline =
-      !isAutoAwayEnabled || state === 'active' || state === 'unknown';
-
-    if (isOnline) {
-      goOnline();
-    } else {
-      goAway();
-    }
-
-    prevState = state;
-    setTimeout(pollSystemIdleState, 1000);
-  };
-
-  pollSystemIdleState();
-};
-
 export const listenToUserPresenceChanges = (): void => {
-  setupUserPresenceListening();
+  watch(
+    (state) => {
+      const server = state.servers.find(
+        (server) => server.url === getServerUrl()
+      );
 
-  listen(SYSTEM_SUSPENDING, () => {
-    if (!isAutoAwayEnabled) {
-      return;
+      if (!server) {
+        return undefined;
+      }
+
+      return (
+        !server.isAutoAwayEnabled ||
+        server.idleState === 'active' ||
+        server.idleState === 'unknown'
+      );
+    },
+    (isOnline) => {
+      if (isOnline === undefined) {
+        return;
+      }
+
+      if (isOnline) {
+        goOnline();
+      } else {
+        goAway();
+      }
     }
-
-    goAway();
-  });
-
-  listen(SYSTEM_LOCKING_SCREEN, () => {
-    if (!isAutoAwayEnabled) {
-      return;
-    }
-
-    goAway();
-  });
+  );
 };
 
 export const setUserPresenceDetection = (options: {
@@ -70,4 +46,12 @@ export const setUserPresenceDetection = (options: {
   idleThreshold = options.idleThreshold;
   goOnline = () => options.setUserOnline(true);
   goAway = () => options.setUserOnline(false);
+  dispatch({
+    type: 'webview/userPresenceParametersChanged',
+    payload: {
+      url: getServerUrl(),
+      isAutoAwayEnabled,
+      idleThreshold,
+    },
+  });
 };

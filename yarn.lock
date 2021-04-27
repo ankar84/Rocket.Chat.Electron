@@ -13068,8 +13068,8 @@ resolve@^2.0.0-next.3:
     semver: ^7.3.2
     ts-jest: ^26.4.0
     ts-node: ^9.0.0
-    tslib: ^2.0.1
-    typescript: ^4.0.3
+    tslib: ^2.2.0
+    typescript: ^4.2.4
     xvfb-maybe: ^0.2.1
   dependenciesMeta:
     fsevents:
@@ -14500,13 +14500,6 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.1":
-  version: 2.0.3
-  resolution: "tslib@npm:2.0.3"
-  checksum: 447bfca5deaa157806c3f77eaba74d05dd0b38b014e47ce79d98b5c77ce7d91b00a687ba13ca1b5a74d35ca1098ac7a072c0a97fad06f0266612f2a03a6c8e8f
-  languageName: node
-  linkType: hard
-
 "tslib@npm:^2.2.0":
   version: 2.2.0
   resolution: "tslib@npm:2.2.0"
@@ -14631,16 +14624,6 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
-typescript@^4.0.3:
-  version: 4.1.2
-  resolution: "typescript@npm:4.1.2"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: d2ac373b469e973448c7287d0fbc732dbd34d00d07911b9506bbf81469a80db6613361fc9293d021da357cb7c7da2ee32f56d8ef76446361231374200cd6aee9
-  languageName: node
-  linkType: hard
-
 typescript@^4.2.4:
   version: 4.2.4
   resolution: "typescript@npm:4.2.4"
@@ -14648,16 +14631,6 @@ typescript@^4.2.4:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: edaede2fa77f56b7fba80ee624a2368ab1216e75b0434d968ccb47ab0a5e2f6d94f848b3b111c1237dd71e988cd376af26370dcdad3b94355c76e759f0dd0a1e
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@^4.0.3#builtin<compat/typescript>":
-  version: 4.1.2
-  resolution: "typescript@patch:typescript@npm%3A4.1.2#builtin<compat/typescript>::version=4.1.2&hash=a45b0e"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 6eb8f14f42b881bcfdaa47f68cf1d108fdb17ab687465198060358eba2f75e54b420f8aeacf2a3b17361c702b3cf2dd324cfb7d58647053c24bb7874cadd201c
   languageName: node
   linkType: hard
 

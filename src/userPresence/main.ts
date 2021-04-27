@@ -1,21 +1,84 @@
 import { powerMonitor } from 'electron';
 
-import { handle } from '../ipc/main';
-import { dispatch } from '../store';
-import { SYSTEM_SUSPENDING, SYSTEM_LOCKING_SCREEN } from './actions';
+import { Server } from '../servers/common';
+import { dispatch, select } from '../store';
+
+type ServerWithUserPresence = Server & {
+  isAutoAwayEnabled: true;
+  idleThreshold: number;
+};
+
+const hasUserPresence = (server: Server): server is ServerWithUserPresence =>
+  server.isAutoAwayEnabled === true && server.idleThreshold !== null;
+
+const forEachServerWithUserPresence = (
+  cb: (server: ServerWithUserPresence) => void
+): void => {
+  const servers = select((state) => state.servers);
+
+  for (const server of servers) {
+    if (!hasUserPresence(server)) {
+      continue;
+    }
+
+    cb(server);
+  }
+};
+
+const declareAllServersIdle = (): void => {
+  forEachServerWithUserPresence((server) => {
+    dispatch({
+      type: 'server/idleStateChanged',
+      payload: {
+        url: server.url,
+        idleState: 'idle',
+      },
+    });
+  });
+};
+
+const declareAllServersActive = (): void => {
+  forEachServerWithUserPresence((server) => {
+    dispatch({
+      type: 'server/idleStateChanged',
+      payload: {
+        url: server.url,
+        idleState: 'active',
+      },
+    });
+  });
+};
 
 export const setupPowerMonitor = (): void => {
   powerMonitor.addListener('suspend', () => {
-    dispatch({ type: SYSTEM_SUSPENDING });
+    declareAllServersIdle();
+  });
+
+  powerMonitor.addListener('resume', () => {
+    declareAllServersActive();
   });
 
   powerMonitor.addListener('lock-screen', () => {
-    dispatch({ type: SYSTEM_LOCKING_SCREEN });
+    declareAllServersIdle();
   });
 
-  handle(
-    'power-monitor/get-system-idle-state',
-    async (_webContents, idleThreshold) =>
-      powerMonitor.getSystemIdleState(idleThreshold)
-  );
+  powerMonitor.addListener('unlock-screen', () => {
+    declareAllServersActive();
+  });
+
+  const pollSystemIdleState = (): void => {
+    forEachServerWithUserPresence((server) => {
+      dispatch({
+        type: 'server/idleStateChanged',
+        payload: {
+          url: server.url,
+          idleState: powerMonitor.getSystemIdleState(server.idleThreshold),
+        },
+      });
+    });
+
+    setTimeout(pollSystemIdleState, 1000);
+  };
+
+  pollSystemIdleState();
 };

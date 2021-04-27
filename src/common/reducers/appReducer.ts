@@ -1,4 +1,4 @@
-import { AppInfo } from '../../types/AppInfo';
+import { AppInfo } from '../types/AppInfo';
 
 type SetInfo = {
   type: 'app/set-info';

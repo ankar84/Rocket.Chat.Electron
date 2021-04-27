@@ -1,5 +1,6 @@
 import { AnyAction, combineReducers, Reducer } from 'redux';
 
+import { app } from '../common/reducers/appReducer';
 import { downloads } from '../downloads/reducers/downloads';
 import {
   clientCertificates,
@@ -26,7 +27,6 @@ import {
   skippedUpdateVersion,
   updateError,
 } from '../updates/reducers';
-import { app } from './reducers/app';
 
 const _rootReducer = combineReducers({
   app,
