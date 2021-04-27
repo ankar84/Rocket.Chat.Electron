@@ -9,12 +9,10 @@ import {
 import { useUniqueId, useAutoFocus } from '@rocket.chat/fuselage-hooks';
 import React, { useState, useEffect, FC, ChangeEvent } from 'react';
 import { useTranslation, Trans } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
 
+import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
+import { useAppSelector } from '../../../common/hooks/useAppSelector';
 import { useAppVersion } from '../../../common/hooks/useAppVersion';
-import { RootAction } from '../../../store/actions';
-import { RootState } from '../../../store/rootReducer';
 import { UPDATES_CHECK_FOR_UPDATES_REQUESTED } from '../../../updates/actions';
 import {
   ABOUT_DIALOG_TOGGLE_UPDATE_ON_START,
@@ -27,27 +25,26 @@ const copyright = `© 2016-${new Date().getFullYear()}, Rocket.Chat`;
 
 export const AboutDialog: FC = () => {
   const appVersion = useAppVersion();
-  const doCheckForUpdatesOnStartup = useSelector(
-    ({ doCheckForUpdatesOnStartup }: RootState) => doCheckForUpdatesOnStartup
+  const doCheckForUpdatesOnStartup = useAppSelector(
+    ({ doCheckForUpdatesOnStartup }) => doCheckForUpdatesOnStartup
   );
-  const isCheckingForUpdates = useSelector(
-    ({ isCheckingForUpdates }: RootState) => isCheckingForUpdates
+  const isCheckingForUpdates = useAppSelector(
+    ({ isCheckingForUpdates }) => isCheckingForUpdates
   );
-  const isEachUpdatesSettingConfigurable = useSelector(
-    ({ isEachUpdatesSettingConfigurable }: RootState) =>
-      isEachUpdatesSettingConfigurable
+  const isEachUpdatesSettingConfigurable = useAppSelector(
+    ({ isEachUpdatesSettingConfigurable }) => isEachUpdatesSettingConfigurable
   );
-  const isUpdatingAllowed = useSelector(
-    ({ isUpdatingAllowed }: RootState) => isUpdatingAllowed
+  const isUpdatingAllowed = useAppSelector(
+    ({ isUpdatingAllowed }) => isUpdatingAllowed
   );
-  const isUpdatingEnabled = useSelector(
-    ({ isUpdatingEnabled }: RootState) => isUpdatingEnabled
+  const isUpdatingEnabled = useAppSelector(
+    ({ isUpdatingEnabled }) => isUpdatingEnabled
   );
-  const newUpdateVersion = useSelector(
-    ({ newUpdateVersion }: RootState) => newUpdateVersion
+  const newUpdateVersion = useAppSelector(
+    ({ newUpdateVersion }) => newUpdateVersion
   );
-  const openDialog = useSelector(({ openDialog }: RootState) => openDialog);
-  const updateError = useSelector(({ updateError }: RootState) => updateError);
+  const openDialog = useAppSelector(({ openDialog }) => openDialog);
+  const updateError = useAppSelector(({ updateError }) => updateError);
 
   const isVisible = openDialog === 'about';
   const canUpdate = isUpdatingAllowed && isUpdatingEnabled;
@@ -56,7 +53,7 @@ export const AboutDialog: FC = () => {
   const canSetCheckForUpdatesOnStartup =
     isUpdatingAllowed && isEachUpdatesSettingConfigurable;
 
-  const dispatch = useDispatch<Dispatch<RootAction>>();
+  const dispatch = useAppDispatch();
 
   const { t } = useTranslation();
 

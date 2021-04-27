@@ -3,12 +3,9 @@ import { parse } from 'url';
 import { Icon } from '@rocket.chat/fuselage';
 import React, { useMemo, FC } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useDispatch, useSelector } from 'react-redux';
-import { Dispatch } from 'redux';
-import { createSelector } from 'reselect';
 
-import { RootAction } from '../../../store/actions';
-import { RootState } from '../../../store/rootReducer';
+import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
+import { useAppSelector } from '../../../common/hooks/useAppSelector';
 import {
   SIDE_BAR_ADD_NEW_SERVER_CLICKED,
   SIDE_BAR_DOWNLOADS_BUTTON_CLICKED,
@@ -26,23 +23,18 @@ import { useKeyboardShortcuts } from './useKeyboardShortcuts';
 import { useSorting } from './useSorting';
 
 export const SideBar: FC = () => {
-  const servers = useSelector(
-    createSelector(
-      ({ currentView }: RootState) => currentView,
-      ({ servers }: RootState) => servers,
-      (currentView, servers) =>
-        servers.map((server) =>
-          Object.assign(server, {
-            selected:
-              typeof currentView === 'object'
-                ? server.url === currentView.url
-                : false,
-          })
-        )
+  const servers = useAppSelector(({ currentView, servers }) =>
+    servers.map((server) =>
+      Object.assign(server, {
+        selected:
+          typeof currentView === 'object'
+            ? server.url === currentView.url
+            : false,
+      })
     )
   );
-  const isSideBarEnabled = useSelector(
-    ({ isSideBarEnabled }: RootState) => isSideBarEnabled
+  const isSideBarEnabled = useAppSelector(
+    ({ isSideBarEnabled }) => isSideBarEnabled
   );
   const isVisible = servers.length > 0 && isSideBarEnabled;
 
@@ -61,7 +53,7 @@ export const SideBar: FC = () => {
     handleDrop,
   } = useSorting(servers);
 
-  const dispatch = useDispatch<Dispatch<RootAction>>();
+  const dispatch = useAppDispatch();
 
   const handleAddServerButtonClicked = (): void => {
     dispatch({ type: SIDE_BAR_ADD_NEW_SERVER_CLICKED });

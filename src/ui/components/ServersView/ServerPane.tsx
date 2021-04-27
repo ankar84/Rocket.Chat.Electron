@@ -1,9 +1,7 @@
 import { WebviewTag } from 'electron';
 import React, { useRef, useEffect, FC } from 'react';
-import { useDispatch } from 'react-redux';
-import { Dispatch } from 'redux';
 
-import { RootAction } from '../../../store/actions';
+import { useAppDispatch } from '../../../common/hooks/useAppDispatch';
 import {
   LOADING_ERROR_VIEW_RELOAD_SERVER_CLICKED,
   WEBVIEW_ATTACHED,
@@ -24,7 +22,7 @@ export const ServerPane: FC<ServerPaneProps> = ({
   isSelected,
   isFailed,
 }) => {
-  const dispatch = useDispatch<Dispatch<RootAction>>();
+  const dispatch = useAppDispatch();
 
   const webviewRef = useRef<WebviewTag>(null);
 
