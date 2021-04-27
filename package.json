@@ -53,6 +53,7 @@
     "@rocket.chat/fuselage-hooks": "^0.17.2",
     "@rocket.chat/icons": "^0.17.2",
     "@rocket.chat/null-react-renderer": "workspace:packages/null-react-renderer",
+    "@rocket.chat/redux-over-electron": "workspace:packages/redux-over-electron",
     "abort-controller": "^3.0.0",
     "electron-store": "^6.0.0",
     "electron-updater": "^4.3.5",

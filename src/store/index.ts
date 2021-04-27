@@ -1,4 +1,9 @@
 import {
+  forwardToMain,
+  forwardToRenderers,
+  getInitialState,
+} from '@rocket.chat/redux-over-electron';
+import {
   applyMiddleware,
   createStore,
   Store,
@@ -9,7 +14,6 @@ import {
 
 import { RootAction } from './actions';
 import { hasPayload, isErrored, isResponseTo } from './fsa';
-import { forwardToRenderers, getInitialState, forwardToMain } from './ipc';
 import { rootReducer, RootState } from './rootReducer';
 
 let reduxStore: Store<RootState, RootAction>;
@@ -35,7 +39,7 @@ export const createRendererReduxStore = async (): Promise<
   Store<RootState, RootAction>
 > => {
   const initialState = await getInitialState();
-  const composeEnhancers: typeof compose =
+  const composeEnhancers: <R>(a: R) => R =
     (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
   const enhancers = composeEnhancers(
     applyMiddleware(forwardToMain, catchLastAction)

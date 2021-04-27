@@ -3021,6 +3021,8 @@ __metadata:
     react-reconciler: ^0.26.2
     rimraf: ^3.0.2
     typescript: ^4.2.4
+  peerDependencies:
+    react: ^17.0.2
   languageName: unknown
   linkType: soft
 
@@ -3032,6 +3034,27 @@ __metadata:
   checksum: 9128e034dc3bac6afa61249bf90eb8dbddcc19644592336ee4d30c086dba9bb619e70a53f4c0eddb043b3399e8da9d75cd57f06c19d88551f28dc5a8cb30879d
   languageName: node
   linkType: hard
+
+"@rocket.chat/redux-over-electron@workspace:packages/redux-over-electron":
+  version: 0.0.0-use.local
+  resolution: "@rocket.chat/redux-over-electron@workspace:packages/redux-over-electron"
+  dependencies:
+    "@rocket.chat/eslint-config-alt": ^0.6.3-dev.230
+    "@rocket.chat/prettier-config": ^0.6.3-dev.230
+    electron: ^12.0.5
+    eslint: ^7.25.0
+    npm-run-all: ^4.1.5
+    prettier: ^2.2.1
+    redux: ^4.1.0
+    rimraf: ^3.0.2
+    tslib: ^2.2.0
+    typescript: ^4.2.4
+  peerDependencies:
+    electron: ^12.0.5
+    redux: ^4.1.0
+    tslib: ^2.2.0
+  languageName: unknown
+  linkType: soft
 
 "@rollup/plugin-babel@npm:^5.2.0":
   version: 5.2.2
@@ -3490,6 +3513,13 @@ __metadata:
   version: 12.20.10
   resolution: "@types/node@npm:12.20.10"
   checksum: 0d358c4660f32062567c878dc950d77edac737bda113dee066afc187fb4ef0eeac9acd7cfe72443f9b95a57da260851e7037f907423d05c09bcf1ae2ff89d334
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^14.6.2":
+  version: 14.14.42
+  resolution: "@types/node@npm:14.14.42"
+  checksum: a9803d904badfd32fd2efe6efc40e5838a44dc0cb8b415762f890308581167a74f5d8f3e4074720d81490aad6a86ad130661cd9ecb79591aad9b5ee41fca7ad2
   languageName: node
   linkType: hard
 
@@ -6338,6 +6368,19 @@ __metadata:
   bin:
     electron: cli.js
   checksum: e31420db107a361c2a1d1036b1cd7d0d0661cfc005e1cdfd969d780a696ec5eb24bef500169414657390f6e128b2c4675732c7d4f1608c7b6ebb9a4d81bfe80c
+  languageName: node
+  linkType: hard
+
+"electron@npm:^12.0.5":
+  version: 12.0.5
+  resolution: "electron@npm:12.0.5"
+  dependencies:
+    "@electron/get": ^1.0.1
+    "@types/node": ^14.6.2
+    extract-zip: ^1.0.3
+  bin:
+    electron: cli.js
+  checksum: c4de194abc7a1e061f8a8a6a651cd0f15233802e5a1821d99a5c1db5396ea2742ae793a609b953d9d0150b249c827a644f6a83adafb837ce1a5baa34e51cd3fa
   languageName: node
   linkType: hard
 
@@ -12486,7 +12529,7 @@ fsevents@~2.1.2:
   languageName: node
   linkType: hard
 
-"redux@npm:^4.0.0":
+"redux@npm:^4.0.0, redux@npm:^4.1.0":
   version: 4.1.0
   resolution: "redux@npm:4.1.0"
   dependencies:
@@ -12974,6 +13017,7 @@ resolve@^2.0.0-next.3:
     "@rocket.chat/icons": ^0.17.2
     "@rocket.chat/null-react-renderer": "workspace:packages/null-react-renderer"
     "@rocket.chat/prettier-config": ^0.6.3-dev.230
+    "@rocket.chat/redux-over-electron": "workspace:packages/redux-over-electron"
     "@rollup/plugin-babel": ^5.2.0
     "@rollup/plugin-commonjs": ^15.1.0
     "@rollup/plugin-json": ^4.1.0
@@ -14460,6 +14504,13 @@ resolve@^2.0.0-next.3:
   version: 2.0.3
   resolution: "tslib@npm:2.0.3"
   checksum: 447bfca5deaa157806c3f77eaba74d05dd0b38b014e47ce79d98b5c77ce7d91b00a687ba13ca1b5a74d35ca1098ac7a072c0a97fad06f0266612f2a03a6c8e8f
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "tslib@npm:2.2.0"
+  checksum: 2d35468c470410871c5246e43f12dcb6d0fc363b617c176f26443b9530e5c5ee8448966892a42956168d8f495da7865bda33dfe82c26c91991e28999974a618f
   languageName: node
   linkType: hard
 

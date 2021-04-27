@@ -10,15 +10,6 @@ export type FluxStandardAction<
       payload: Payload;
     };
 
-export const isFSA = <Action extends FluxStandardAction<string, unknown>>(
-  action: unknown
-): action is Action =>
-  typeof action === 'object' &&
-  action !== null &&
-  !Array.isArray(action) &&
-  'type' in action &&
-  typeof (action as { type: string }).type === 'string';
-
 export const hasMeta = <Action extends FluxStandardAction<string, unknown>>(
   action: Action
 ): action is Action & { meta: Record<string, unknown> } =>
@@ -32,14 +23,6 @@ export const isResponse = <Action extends FluxStandardAction<string, unknown>>(
   hasMeta(action) &&
   (action as Action & { meta: { response: unknown; id: unknown } }).meta
     .response === true;
-
-export const isLocallyScoped = <
-  Action extends FluxStandardAction<string, unknown>
->(
-  action: Action
-): action is Action & { meta: { scope: 'local' } } =>
-  hasMeta(action) &&
-  (action as Action & { meta: { scope: unknown } }).meta.scope === 'local';
 
 export const isErrored = <Action extends FluxStandardAction<string, unknown>>(
   action: Action
