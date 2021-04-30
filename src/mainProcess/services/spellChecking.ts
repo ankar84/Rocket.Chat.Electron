@@ -3,8 +3,8 @@ import { app, session, webContents } from 'electron';
 import {
   SPELL_CHECKING_LANGUAGE_TOGGLED,
   SPELL_CHECKING_TOGGLED,
-} from '../common/actions/spellCheckingActions';
-import { listen } from '../store';
+} from '../../common/actions/spellCheckingActions';
+import { listen } from '../../store';
 
 const setSpellCheckerLanguages = async (
   languages: Set<string>

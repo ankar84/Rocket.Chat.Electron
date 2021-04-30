@@ -4,6 +4,7 @@ import { setupRendererErrorHandling } from './errors';
 import { invoke } from './ipc/renderer';
 import { JitsiMeetElectron, JitsiMeetElectronAPI } from './jitsi/preload';
 import { listenToNotificationsRequests } from './notifications/preload';
+import { createRendererReduxStore } from './rendererProcess/createRendererReduxStore';
 import { listenToScreenSharingRequests } from './screenSharing/preload';
 import {
   RocketChatDesktop,
@@ -11,7 +12,7 @@ import {
   serverInfo,
 } from './servers/preload/api';
 import { setServerUrl } from './servers/preload/urls';
-import { createRendererReduxStore } from './store';
+import { setReduxStore } from './store';
 import { listenToMessageBoxEvents } from './ui/preload/messageBox';
 import { handleTrafficLightsSpacing } from './ui/preload/sidebar';
 import { listenToUserPresenceChanges } from './userPresence/preload';
@@ -36,7 +37,8 @@ const start = async (): Promise<void> => {
 
   setServerUrl(serverUrl);
 
-  await createRendererReduxStore();
+  const reduxStore = await createRendererReduxStore();
+  setReduxStore(reduxStore);
 
   await whenReady();
 

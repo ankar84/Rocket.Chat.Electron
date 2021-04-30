@@ -1,4 +1,3 @@
-import { Download } from '../../downloads/common';
 import { ActionOf } from '../../store/rootAction';
 import * as appActions from '../actions/appActions';
 import {
@@ -7,6 +6,7 @@ import {
   DOWNLOAD_REMOVED,
   DOWNLOAD_UPDATED,
 } from '../actions/downloadsActions';
+import { Download } from '../types/Download';
 
 type DownloadsAction =
   | ActionOf<typeof appActions.settingsLoaded.type>

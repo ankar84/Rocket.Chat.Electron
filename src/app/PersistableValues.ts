@@ -1,6 +1,6 @@
 import type { Certificate } from 'electron';
 
-import { Download } from '../downloads/common';
+import { Download } from '../common/types/Download';
 import { Server } from '../servers/common';
 import { WindowState } from '../ui/common';
 

@@ -1,26 +1,16 @@
 import { Store } from 'redux';
 
 import { hasPayload, isErrored, isResponseTo } from '../common/helpers/actions';
-import { createMainReduxStore as _createMainReduxStore } from '../mainProcess/createMainReduxStore';
-import { createRendererReduxStore as _createRendererReduxStore } from '../rendererProcess/createRendererReduxStore';
 import { lastAction } from './catchLastAction';
 import { RootAction } from './rootAction';
 import { RootState } from './rootReducer';
 
-let reduxStore: Store<RootState, RootAction>;
+export let reduxStore: Store<RootState, RootAction>;
 
-export const createMainReduxStore = async (): Promise<
-  Store<RootState, RootAction>
-> => {
-  reduxStore = await _createMainReduxStore();
-  return reduxStore;
-};
-
-export const createRendererReduxStore = async (): Promise<
-  Store<RootState, RootAction>
-> => {
-  reduxStore = await _createRendererReduxStore();
-  return reduxStore;
+export const setReduxStore = (
+  _reduxStore: Store<RootState, RootAction>
+): void => {
+  reduxStore = _reduxStore;
 };
 
 export const dispatch = <Action extends RootAction>(action: Action): void => {

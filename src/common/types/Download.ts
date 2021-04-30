@@ -1,10 +1,5 @@
-import { Server } from '../servers/common';
-
-export const DownloadStatus = {
-  ALL: 'All',
-  PAUSED: 'Paused',
-  CANCELLED: 'Cancelled',
-} as const;
+import { Server } from '../../servers/common';
+import { DownloadStatus } from './DownloadStatus';
 
 export type Download = {
   itemId: number;

@@ -12,6 +12,7 @@ import { SpellCheckingActionTypeToPayloadMap } from '../common/actions/spellChec
 import { UiActionTypeToPayloadMap } from '../common/actions/uiActions';
 import * as updateActions from '../common/actions/updateActions';
 import * as updateCheckActions from '../common/actions/updateCheckActions';
+import * as updateDialogActions from '../common/actions/updateDialogActions';
 import * as updatesActions from '../common/actions/updatesActions';
 import { SystemIdleState } from '../common/types/SystemIdleState';
 import { Server } from '../servers/common';
@@ -39,6 +40,7 @@ type ActionTypeToPayloadMap = DeepLinksActionTypeToPayloadMap &
   } & ActionsFrom<typeof appActions> &
   ActionsFrom<typeof updatesActions> &
   ActionsFrom<typeof updateCheckActions> &
+  ActionsFrom<typeof updateDialogActions> &
   ActionsFrom<typeof updateActions>;
 
 type RootActions = {

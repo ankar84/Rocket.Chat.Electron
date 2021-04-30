@@ -12,7 +12,8 @@ import React, { useState, useMemo, useCallback, FC, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 
-import { Download, DownloadStatus } from '../../../downloads/common';
+import { Download } from '../../../common/types/Download';
+import { DownloadStatus } from '../../../common/types/DownloadStatus';
 import { RootState } from '../../../store/rootReducer';
 import DownloadItem from './DownloadItem';
 

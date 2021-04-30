@@ -1,7 +1,7 @@
 import { powerMonitor } from 'electron';
 
-import { Server } from '../servers/common';
-import { dispatch, select } from '../store';
+import { Server } from '../../servers/common';
+import { dispatch, select } from '../../store';
 
 type ServerWithUserPresence = Server & {
   isAutoAwayEnabled: true;

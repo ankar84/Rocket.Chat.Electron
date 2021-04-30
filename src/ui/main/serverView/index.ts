@@ -32,9 +32,9 @@ import {
   WEBVIEW_DID_NAVIGATE,
   WEBVIEW_DID_START_LOADING,
 } from '../../../common/actions/uiActions';
-import { handleWillDownloadEvent } from '../../../downloads/main';
 import { handle } from '../../../ipc/main';
-import { isProtocolAllowed } from '../../../navigation/main';
+import { handleWillDownloadEvent } from '../../../mainProcess/services/downloads';
+import { isProtocolAllowed } from '../../../mainProcess/services/navigation';
 import { Server } from '../../../servers/common';
 import { dispatch, listen, select } from '../../../store';
 import { getRootWindow } from '../rootWindow';

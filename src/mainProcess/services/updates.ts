@@ -1,34 +1,30 @@
-import fs from 'fs';
-import path from 'path';
+import { promises as fsPromises } from 'fs';
+import { join } from 'path';
 
 import { app } from 'electron';
 import { autoUpdater } from 'electron-updater';
 
-import {
-  UPDATE_DIALOG_SKIP_UPDATE_CLICKED,
-  UPDATE_DIALOG_INSTALL_BUTTON_CLICKED,
-} from '../common/actions/uiActions';
-import * as updateActions from '../common/actions/updateActions';
-import * as updateCheckActions from '../common/actions/updateCheckActions';
-import * as updatesActions from '../common/actions/updatesActions';
-import { AppLevelUpdateConfiguration } from '../common/types/AppLevelUpdateConfiguration';
-import { UpdateConfiguration } from '../common/types/UpdateConfiguration';
-import { UserLevelUpdateConfiguration } from '../common/types/UserLevelUpdateConfiguration';
-import { listen, dispatch, select } from '../store';
-import { RootState } from '../store/rootReducer';
+import * as updateActions from '../../common/actions/updateActions';
+import * as updateCheckActions from '../../common/actions/updateCheckActions';
+import * as updatesActions from '../../common/actions/updatesActions';
+import { AppLevelUpdateConfiguration } from '../../common/types/AppLevelUpdateConfiguration';
+import { UpdateConfiguration } from '../../common/types/UpdateConfiguration';
+import { UserLevelUpdateConfiguration } from '../../common/types/UserLevelUpdateConfiguration';
+import { dispatch, select } from '../../store';
+import { RootState } from '../../store/rootReducer';
 import {
   askUpdateInstall,
   AskUpdateInstallResponse,
   warnAboutInstallUpdateLater,
   warnAboutUpdateDownload,
   warnAboutUpdateSkipped,
-} from '../ui/main/dialogs';
+} from '../../ui/main/dialogs';
 
 const readJsonObject = async (
   filePath: string
 ): Promise<Record<string, unknown>> => {
   try {
-    const content = await fs.promises.readFile(filePath, 'utf8');
+    const content = await fsPromises.readFile(filePath, 'utf8');
     const json = JSON.parse(content);
 
     return json && typeof json === 'object' && !Array.isArray(json) ? json : {};
@@ -40,7 +36,7 @@ const readJsonObject = async (
 const readAppJsonObject = async (
   basename: string
 ): Promise<Record<string, unknown>> => {
-  const filePath = path.join(
+  const filePath = join(
     app.getAppPath(),
     app.getAppPath().endsWith('app.asar') ? '..' : '.',
     basename
@@ -51,7 +47,7 @@ const readAppJsonObject = async (
 const readUserJsonObject = async (
   basename: string
 ): Promise<Record<string, unknown>> => {
-  const filePath = path.join(app.getPath('userData'), basename);
+  const filePath = join(app.getPath('userData'), basename);
   return readJsonObject(filePath);
 };
 
@@ -115,11 +111,15 @@ const loadConfiguration = async (): Promise<UpdateConfiguration> => {
   const appConfiguration = await loadAppConfiguration();
   const userConfiguration = await loadUserConfiguration();
 
-  return mergeConfigurations(
+  const configuration = mergeConfigurations(
     defaultConfiguration,
     appConfiguration,
     userConfiguration
   );
+
+  dispatch(updatesActions.ready(configuration));
+
+  return configuration;
 };
 
 const checkForUpdates = async (): Promise<void> => {
@@ -130,26 +130,35 @@ const checkForUpdates = async (): Promise<void> => {
   }
 };
 
+const skipUpdate = async (): Promise<void> => {
+  await warnAboutUpdateSkipped();
+  dispatch(updateActions.skipped());
+};
+
+const downloadUpdate = async (): Promise<void> => {
+  await warnAboutUpdateDownload();
+
+  try {
+    await autoUpdater.downloadUpdate();
+  } catch (error) {
+    dispatch(updateActions.downloadFailed(error));
+  }
+};
+
+export const updates = {
+  checkForUpdates,
+  skipUpdate,
+  downloadUpdate,
+};
+
 export const setupUpdates = async (): Promise<void> => {
   autoUpdater.autoDownload = false;
 
   const {
     isUpdatingAllowed,
-    isEachUpdatesSettingConfigurable,
     isUpdatingEnabled,
     doCheckForUpdatesOnStartup,
-    skippedUpdateVersion,
   } = await loadConfiguration();
-
-  dispatch(
-    updatesActions.ready({
-      isUpdatingAllowed,
-      isEachUpdatesSettingConfigurable,
-      isUpdatingEnabled,
-      doCheckForUpdatesOnStartup,
-      skippedUpdateVersion,
-    })
-  );
 
   if (!isUpdatingAllowed || !isUpdatingEnabled) {
     return;
@@ -198,23 +207,4 @@ export const setupUpdates = async (): Promise<void> => {
   if (doCheckForUpdatesOnStartup) {
     checkForUpdates();
   }
-
-  listen(updateCheckActions.requested.type, async () => {
-    checkForUpdates();
-  });
-
-  listen(UPDATE_DIALOG_SKIP_UPDATE_CLICKED, async () => {
-    await warnAboutUpdateSkipped();
-    dispatch(updateActions.skipped());
-  });
-
-  listen(UPDATE_DIALOG_INSTALL_BUTTON_CLICKED, async () => {
-    await warnAboutUpdateDownload();
-
-    try {
-      autoUpdater.downloadUpdate();
-    } catch (error) {
-      dispatch(updateActions.downloadFailed(error));
-    }
-  });
 };

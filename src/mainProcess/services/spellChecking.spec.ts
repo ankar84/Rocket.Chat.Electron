@@ -1,10 +1,11 @@
-import { SPELL_CHECKING_LANGUAGE_TOGGLED } from '../common/actions/spellCheckingActions';
-import { createMainReduxStore, dispatch } from '../store';
-import { setupSpellChecking } from './main';
+import { SPELL_CHECKING_LANGUAGE_TOGGLED } from '../../common/actions/spellCheckingActions';
+import { dispatch, setReduxStore } from '../../store';
+import { createMainReduxStore } from '../createMainReduxStore';
+import { setupSpellChecking } from './spellChecking';
 
 describe('setupSpellChecking', () => {
-  beforeAll(() => {
-    createMainReduxStore();
+  beforeAll(async () => {
+    setReduxStore(await createMainReduxStore());
   });
 
   it('works', async () => {

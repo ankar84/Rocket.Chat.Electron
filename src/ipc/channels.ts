@@ -1,4 +1,4 @@
-import { Download } from '../downloads/common';
+import { Download } from '../common/types/Download';
 import { Server } from '../servers/common';
 
 type ChannelToArgsMap = {

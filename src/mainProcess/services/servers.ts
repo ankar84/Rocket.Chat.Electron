@@ -8,16 +8,16 @@ import {
   SERVER_URL_RESOLUTION_REQUESTED,
   SERVER_URL_RESOLVED,
   SERVERS_LOADED,
-} from '../common/actions/serversActions';
-import { hasMeta } from '../common/helpers/actions';
-import { invoke } from '../ipc/main';
-import { select, dispatch, listen } from '../store';
-import { getRootWindow } from '../ui/main/rootWindow';
+} from '../../common/actions/serversActions';
+import { hasMeta } from '../../common/helpers/actions';
+import { invoke } from '../../ipc/main';
 import {
   ServerUrlResolutionStatus,
   Server,
   ServerUrlResolutionResult,
-} from './common';
+} from '../../servers/common';
+import { select, dispatch, listen } from '../../store';
+import { getRootWindow } from '../../ui/main/rootWindow';
 
 const REQUIRED_SERVER_VERSION_RANGE = '>=2.0.0';
 

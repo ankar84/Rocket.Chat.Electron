@@ -1,5 +1,5 @@
-import { ServerUrlResolutionStatus } from './common';
-import { convertToURL, resolveServerUrl } from './main';
+import { ServerUrlResolutionStatus } from '../../servers/common';
+import { convertToURL, resolveServerUrl } from './servers';
 
 describe('convertToUrl', () => {
   it.each([

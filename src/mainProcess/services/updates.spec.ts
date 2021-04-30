@@ -1,7 +1,7 @@
-import { AppLevelUpdateConfiguration } from '../common/types/AppLevelUpdateConfiguration';
-import { UpdateConfiguration } from '../common/types/UpdateConfiguration';
-import { UserLevelUpdateConfiguration } from '../common/types/UserLevelUpdateConfiguration';
-import { mergeConfigurations } from './main';
+import { AppLevelUpdateConfiguration } from '../../common/types/AppLevelUpdateConfiguration';
+import { UpdateConfiguration } from '../../common/types/UpdateConfiguration';
+import { UserLevelUpdateConfiguration } from '../../common/types/UserLevelUpdateConfiguration';
+import { mergeConfigurations } from './updates';
 
 describe('mergeConfigurations', () => {
   it('keeps default configuration', () => {

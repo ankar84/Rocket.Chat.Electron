@@ -3,12 +3,14 @@ import { render, unmountComponentAtNode } from 'react-dom';
 
 import { initializeI18next } from './common/i18n/initializeI18next';
 import { setupRendererErrorHandling } from './errors';
-import { createRendererReduxStore } from './store';
+import { createRendererReduxStore } from './rendererProcess/createRendererReduxStore';
+import { setReduxStore } from './store';
 import { App } from './ui/components/App';
 import { whenReady } from './whenReady';
 
 const start = async (): Promise<void> => {
   const reduxStore = await createRendererReduxStore();
+  setReduxStore(reduxStore);
 
   await whenReady();
 

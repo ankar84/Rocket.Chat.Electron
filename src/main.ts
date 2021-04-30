@@ -10,24 +10,28 @@ import {
 } from './app/main/data';
 import { setUserDataDirectory } from './app/main/dev';
 import { initializeI18next } from './common/i18n/initializeI18next';
-import { setupDeepLinks, processDeepLinksInArgs } from './deepLinks/main';
-import { setupDownloads } from './downloads/main';
 import { setupMainErrorHandling } from './errors';
 import AppRoot from './mainProcess/components/AppRoot';
-import { setupNavigation } from './navigation/main';
+import { createMainReduxStore } from './mainProcess/createMainReduxStore';
+import {
+  setupDeepLinks,
+  processDeepLinksInArgs,
+} from './mainProcess/services/deepLinks';
+import { setupDownloads } from './mainProcess/services/downloads';
+import { setupNavigation } from './mainProcess/services/navigation';
+import { setupPowerMonitor } from './mainProcess/services/powerMonitor';
+import { setupScreenSharing } from './mainProcess/services/screenSharing';
+import { setupServers } from './mainProcess/services/servers';
+import { setupSpellChecking } from './mainProcess/services/spellChecking';
+import { setupUpdates } from './mainProcess/services/updates';
 import { setupNotifications } from './notifications/main';
-import { setupScreenSharing } from './screenSharing/main';
-import { setupServers } from './servers/main';
-import { setupSpellChecking } from './spellChecking/main';
-import { createMainReduxStore } from './store';
+import { setReduxStore } from './store';
 import {
   createRootWindow,
   showRootWindow,
   exportLocalStorage,
 } from './ui/main/rootWindow';
 import { attachGuestWebContentsEvents } from './ui/main/serverView';
-import { setupUpdates } from './updates/main';
-import { setupPowerMonitor } from './userPresence/main';
 
 const start = async (): Promise<void> => {
   setUserDataDirectory();
@@ -35,6 +39,7 @@ const start = async (): Promise<void> => {
   performElectronStartup();
 
   const reduxStore = await createMainReduxStore();
+  setReduxStore(reduxStore);
 
   await app.whenReady();
 
