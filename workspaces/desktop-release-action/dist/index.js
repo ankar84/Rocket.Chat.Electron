@@ -16412,27 +16412,6 @@ var linux_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _ar
     });
 };
 
-
-
-const setupSnapcraft = () => core.group('Setup Snapcraft', () => linux_awaiter(void 0, void 0, void 0, function* () {
-    yield run(`sudo snap install snapcraft --classic --channel stable`);
-    yield run(`echo /snap/bin >> ${process.env.GITHUB_PATH}`);
-    yield run('sudo chown root:root /');
-    const snapcraftToken = core.getInput('snapcraft_token');
-    const snapcraftTokenFile = './snapcraft-token.txt';
-    yield external_fs_.promises.writeFile(snapcraftTokenFile, snapcraftToken, 'utf-8');
-    yield run(`/snap/bin/snapcraft login --with ${snapcraftTokenFile}`);
-    yield external_fs_.promises.unlink(snapcraftTokenFile);
-}));
-const packOnLinux = () => runElectronBuilder(`--linux tar.gz deb rpm snap`);
-const snapChannels = ['edge', 'beta', 'candidate', 'stable'];
-const uploadSnap = (snapFilePath, level) => linux_awaiter(void 0, void 0, void 0, function* () {
-    const channels = snapChannels.slice(0, snapChannels.indexOf(level) + 1);
-    for (const channel of channels) {
-        yield core.group(`uploading ${snapFilePath} to Snapcraft in channel ${channel}`, () => run(`snapcraft upload --release=${channel} "${snapFilePath}"`));
-    }
-});
-
 ;// CONCATENATED MODULE: ./src/macos.ts
 
 
@@ -16489,7 +16468,6 @@ var src_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argu
 const pack = () => src_awaiter(void 0, void 0, void 0, function* () {
     switch (process.platform) {
         case 'linux':
-            yield setupSnapcraft();
             yield packOnLinux();
             break;
         case 'darwin':
