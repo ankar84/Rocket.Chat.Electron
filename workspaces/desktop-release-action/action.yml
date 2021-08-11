@@ -37,7 +37,7 @@ inputs:
     required: true
   snapcraft_token:
     description: 'The Snapcraft token to publish releases'
-    required: true
+    required: false
 
 runs:
   using: 'node12'
