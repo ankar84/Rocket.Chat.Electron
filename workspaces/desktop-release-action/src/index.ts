@@ -20,7 +20,6 @@ import { packOnWindows } from './windows';
 const pack = async () => {
   switch (process.platform) {
     case 'linux':
-      await setupSnapcraft();
       await packOnLinux();
       break;
 
@@ -38,7 +37,6 @@ const pack = async () => {
 const getFilesToUpload = () =>
   fg([
     'dist/*.tar.gz',
-    'dist/*.snap',
     'dist/*.deb',
     'dist/*.rpm',
     'dist/latest-mac.yml',
